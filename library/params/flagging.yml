@@ -1,0 +1,114 @@
+lib:
+   params:
+      flagging:
+         flagmanager:
+         
+            save:
+               mode: 'save'
+               
+            restore:
+               mode: 'restore'
+               
+            delete:
+               mode: 'delete'
+               
+         flagdata:
+         
+            base:
+               action: 'apply'
+               overwrite: true
+               flagbackup: false
+               
+            unflag:
+               mode: 'unflag'
+               action: 'apply'
+               
+            summary:
+               mode: 'summary'
+               
+            manual:
+               mode: 'manual'
+               datacolumn: 'DATA'
+               _use: lib.params.flagging.flagdata.base
+               
+            shadow:
+               mode: 'shadow'
+               autocorr: false
+               datacolumn: 'DATA'
+               _use: lib.params.flagging.flagdata.base
+                  
+            elevation:
+               autocorr: false
+               mode: 'elevation'
+               upperlimit: 90.0
+               datacolumn: 'DATA'
+               _use: lib.params.flagging.flagdata.base
+                          
+            quack:
+               mode: 'quack'
+               autocorr: false
+               datacolumn: 'DATA'
+               _use: lib.params.flagging.flagdata.base
+               quackinterval: '{root.casa_flagdata_quackinterval}'
+     
+            clip:
+               mode: 'clip'
+               autocorr: false
+               _use: lib.params.flagging.flagdata.base
+     
+            rflag:
+               freqdev: ''
+               timedev: ''
+               winsize: 3
+               mode: 'rflag'
+               autocorr: false 
+               spectralmin: 0.0
+               freqdevscale: 5.0
+               timedevscale: 5.0
+               extendflags: true
+               spectralmax: 1000000.0
+               _use: lib.params.flagging.flagdata.base
+               
+            tfcrop:
+               halfwin: 1
+               mode: 'tfcrop'
+               maxnpieces: 7
+               timefit: 'line'
+               freqfit: 'poly'
+               autocorr: false 
+               timecutoff: 4.0
+               freqcutoff: 3.0
+               extendflags: true 
+               flagdimension: 'freqtime'
+               _use: lib.params.flagging.flagdata.base
+     
+            extend:
+               mode: 'extend'
+               autocorr: false 
+               growaround: true
+               extendpols: true
+               flagneartime: true
+               flagnearfreq: true  
+               _use: lib.params.flagging.flagdata.base
+    
+            tricolour:
+               data-column: 'DATA'
+               flagging-strategy: 'polarisation'
+   
+            rfinder:
+               polarization: 'q'
+               plot_summary: true
+               rfimode: 'use_flags'
+               plot_details: true
+               summary_options: [ant,scan]
+               output_dir: '{root.flagsdir}'
+               
+              
+               
+   
+    
+   
+   
+ 
+   
+   

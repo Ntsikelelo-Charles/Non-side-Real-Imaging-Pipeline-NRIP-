@@ -1,0 +1,189 @@
+lib:
+   steps:
+      prepdata:
+      
+         plotants:
+            cab: casa.plotants
+            params:
+               ms: '{root.ms_path}'
+               _use: lib.params.visualization.plotants
+               
+         elevation:
+            cab: casa.plotms
+            params:
+               ms: '{root.ms_path}'
+               _use: lib.params.visualization.plotms.elevation
+   
+         listobs:
+      
+            ms:
+               cab: casa.listobs
+               params:
+                  ms: '{root.ms_path}'
+                  _use: lib.params.information.listobs
+               
+            calibrators:
+               cab: casa.listobs
+               params:
+                  ms: '{root.msdir}/calibrators.ms'
+                  _use: lib.params.information.listobs
+             
+            target:
+               cab: casa.listobs
+               params:
+                  ms: '{root.msdir}/target.ms'
+                  _use: lib.params.information.listobs
+                  
+            target-corr:
+               cab: casa.listobs
+               params:
+                  ms: '{recipe.msdir}/target-corr.ms'
+                  _use: lib.params.information.listobs
+                  
+         transform:
+      
+            calibrators:
+               cab: casa.mstransform
+               params:
+                  datacolumn: 'data'
+                  ms: '{root.ms_path}'
+                  outputvis: '{root.msdir}/calibrators.ms' 
+                  field: '{root.bpcal-field},{root.gcal-field}, {root.xcal-field}, {root.fcal-field}' 
+                  _use: lib.params.manipulation.mstransform
+
+            target:
+               cab: casa.mstransform
+               params:
+                  datacolumn: 'data'
+                  ms: '{root.ms_path}'
+                  field: '{root.target-field}'
+                  outputvis: '{root.msdir}/target.ms'
+                  _use: lib.params.manipulation.mstransform
+                  
+            target-corr:
+               cab: casa.mstransform
+               params:
+                  datacolumn: 'corrected'
+                  ms: '{recipe.msdir}/target.ms'
+                  field: '{recipe.target-field}'
+                  outputvis: '{recipe.msdir}/target-corr.ms'
+                  _use: lib.params.manipulation.mstransform
+         
+         prepkat:
+      
+            calibrators:
+               cab: prepkat
+               params:
+                  ms_path: '{root.msdir}/calibrators.ms'
+               
+            target:
+               cab: prepkat
+               params:
+                  ms_path: '{root.msdir}/target.ms' 
+                  
+            target-corr:
+               cab: prepkat
+               params:
+                  ms_path: '{recipe.msdir}/target-corr.ms'         
+                  
+         flag-summary:
+      
+            calibrators:
+               cab: casa5.flagsummary 
+               params:
+                  ms: '{root.msdir}/calibrators.ms'
+                  _use: lib.params.flagging.flagdata.summary 
+                
+            target:
+               cab: casa5.flagsummary 
+               params:
+                  ms: '{root.msdir}/target.ms'
+                  _use: lib.params.flagging.flagdata.summary  
+                  
+            target-corr:
+               cab: casa5.flagsummary 
+               params:
+                  ms: '{recipe.msdir}/target-corr.ms'
+                  _use: lib.params.flagging.flagdata.summary  
+                  
+         save-flags:
+         
+            calibrators:
+               cab: casa.flagman
+               params: 
+                  ms: '{root.msdir}/calibrators.ms'
+                  _use: lib.params.flagging.flagmanager.save
+                  
+            target:
+               cab: casa.flagman
+               params: 
+                  ms: '{root.msdir}/target.ms'
+                  _use: lib.params.flagging.flagmanager.save
+                  
+            target-corr:
+               cab: casa.flagman
+               params: 
+                  ms: '{recipe.msdir}/target-corr.ms'
+                  _use: lib.params.flagging.flagmanager.save
+               
+         restore-flags:
+         
+            calibrators:
+               cab: casa.flagman
+               params:
+                  ms: '{root.msdir}/calibrators.ms' 
+                  _use: lib.params.flagging.flagmanager.restore
+                  
+            target:
+               cab: casa.flagman
+               params: 
+                  ms: '{root.msdir}/target.ms'
+                  _use: lib.params.flagging.flagmanager.restore
+                  
+            target-corr:
+               cab: casa.flagman
+               params: 
+                  ms: '{recipe.msdir}/target-corr.ms'
+                  _use: lib.params.flagging.flagmanager.restore
+                  
+         clearcal:
+      
+            calibrators:
+               cab: casa.clearcal
+               params:
+                  field: '{root.bpcal-field}'
+                  ms: '{root.msdir}/calibrators.ms'
+                  _use: lib.params.calibration.clearcal
+                  
+            target:
+               cab: casa.clearcal
+               params:
+                  field: '{root.bpcal-field}'
+                  ms: '{root.msdir}/target.ms'
+                  _use: lib.params.calibration.clearcal
+                   
+            target-corr:
+               cab: casa.clearcal
+               params:
+                  field: '{recipe.bpcal-field}'
+                  ms: '{recipe.msdir}/target-corr.ms'
+                  _use: lib.params.calibration.clearcal
+              
+            
+      
+       
+               
+      
+         
+      
+      
+     
+    
+  
+  
+ 
+    
+    
+   
+   
+

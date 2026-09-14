@@ -1,0 +1,508 @@
+lib:
+  recipes:
+    inspect-prim:
+      name: inspect-prim
+      info: A recipe for inspecting primary gain solutions
+      
+      assign:
+            dirs.base: .
+            dirs.temp: '{config.run.env.HOME}/tmp'
+            log.dir: '{root.logdir}/log-{config.run.datetime}'
+            
+      inputs:
+            field:
+                 dtype: str 
+            
+      steps:
+            
+            plot1-prim-K0:
+                  _use: lib.steps.inspect.gains.prim.prim-K0
+                  info: Plot delay calibration solutions
+                  params:
+                        xaxis: 'antenna1'
+                        plotfile: '{root.calplotdir}/prim.K0-antenna1.png'
+                        
+            plot2-prim-K0:
+                  _use: lib.steps.inspect.gains.prim.prim-K0
+                  info: Plot delay calibration solutions
+                  params:
+                        xaxis: 'time'
+                        plotfile: '{root.calplotdir}/prim.K0-time.png'
+                        
+            plot1-prim-Gp0:
+                  _use: lib.steps.inspect.gains.prim.prim-Gp0
+                  info: Plot Gain phase calibration solutions
+                  params:
+                        xaxis: 'time'
+                        plotfile: '{root.calplotdir}/prim.Gp0-time.png' 
+                        
+            plot2-prim-Gp0:
+                  _use: lib.steps.inspect.gains.prim.prim-Gp0
+                  info: Plot Gain phase calibration solutions
+                  params:
+                        xaxis: 'antenna1'
+                        plotfile: '{root.calplotdir}/prim.Gp0-antenna1.png' 
+                        
+            plot1-prim-Ga0:
+                  _use: lib.steps.inspect.gains.prim.prim-Ga0
+                  info: Plot Gain amplitude calibration solutions
+                  params:
+                        xaxis: 'antenna1' 
+                        plotfile: '{root.calplotdir}/prim.Ga0-antenna1.png' 
+                        
+            plot2-prim-Ga0:
+                  _use: lib.steps.inspect.gains.prim.prim-Ga0
+                  info: Plot Gain amplitude calibration solutions
+                  params:
+                        xaxis: 'time'
+                        plotfile: '{root.calplotdir}/prim.Ga0-time.png'  
+                        
+            plot1-prim-B0:
+                  _use: lib.steps.inspect.gains.prim.prim-B0
+                  info: Plot Bandpass calibration solutions-amplitude
+                  params:
+                        yaxis: 'amp'
+                        plotfile: '{root.calplotdir}/prim.B0_amp.png'
+                  
+            plot2-prim-B0:
+                  _use: lib.steps.inspect.gains.prim.prim-B0
+                  info: Plot bandpass calibration solutions
+                  params:
+                        yaxis: 'phase'
+                        plotfile: '{root.calplotdir}/prim.B0_phase.png' 
+                        
+            plot1-prim-Df0:
+                  _use: lib.steps.inspect.gains.prim.prim-Df0
+                  info: Plot leakage solutions-amplitude
+                  params:
+                        yaxis: 'amplitude'
+                        plotfile: '{root.calplotdir}/prim.Df0_amp.png'
+                  
+            plot2-prim-Df0:
+                  _use: lib.steps.inspect.gains.prim.prim-Df0
+                  info: Plot leakage solutions-phase
+                  params:
+                        yaxis: 'phase'
+                        plotfile: '{root.calplotdir}/prim.Df0_phase.png'
+                        
+            plot3-prim-Df0:
+                  _use: lib.steps.inspect.gains.prim.prim-Df0
+                  info: Plot leakage solutions-amplitude
+                  params:
+                        yaxis: 'real'
+                        plotfile: '{root.calplotdir}/prim.Df0_real.png'
+                        
+            plot1-prim-K1:
+                  _use: lib.steps.inspect.gains.prim.prim-K1
+                  info: Plot delay calibration solutions
+                  params:
+                        xaxis: 'antenna1'
+                        plotfile: '{root.calplotdir}/prim.K1-antenna1.png'
+                        
+            plot2-prim-K1:
+                  _use: lib.steps.inspect.gains.prim.prim-K1
+                  info: Plot delay calibration solutions
+                  params:
+                        xaxis: 'time'
+                        plotfile: '{root.calplotdir}/prim.K1-time.png'
+                        
+            plot1-prim-Gp1:
+                  _use: lib.steps.inspect.gains.prim.prim-Gp1
+                  info: Plot Gain phase calibration solutions
+                  params:
+                        xaxis: 'time'
+                        plotfile: '{root.calplotdir}/prim.Gp1-time.png' 
+                        
+            plot2-prim-Gp1:
+                  _use: lib.steps.inspect.gains.prim.prim-Gp1
+                  info: Plot Gain phase calibration solutions
+                  params:
+                        xaxis: 'antenna1'
+                        plotfile: '{root.calplotdir}/prim.Gp1-antenna1.png' 
+                        
+            plot1-prim-Ga1:
+                  _use: lib.steps.inspect.gains.prim.prim-Ga1
+                  info: Plot Gain amplitude calibration solutions
+                  params:
+                        xaxis: 'antenna1' 
+                        plotfile: '{root.calplotdir}/prim.Ga1-antenna1.png' 
+                        
+            plot2-prim-Ga1:
+                  _use: lib.steps.inspect.gains.prim.prim-Ga1
+                  info: Plot Gain amplitude calibration solutions
+                  params:
+                        xaxis: 'time' 
+                        plotfile: '{root.calplotdir}/prim.Ga1-time.png' 
+                        
+            plot1-prim-B1:
+                  _use: lib.steps.inspect.gains.prim.prim-B1
+                  info: Plot Bandpass calibration solutions-amplitude
+                  params:
+                        yaxis: 'amp'
+                        plotfile: '{root.calplotdir}/prim.B1_amp.png'
+                  
+            plot2-prim-B1:
+                  _use: lib.steps.inspect.gains.prim.prim-B1
+                  info: Plot bandpass calibration solutions
+                  params:
+                        yaxis: 'phase'
+                        plotfile: '{root.calplotdir}/prim.B1_phase.png' 
+                        
+            plot1-prim-Df1:
+                  _use: lib.steps.inspect.gains.prim.prim-Df1
+                  info: Plot leakage solutions-amplitude
+                  params:
+                        yaxis: 'amplitude'
+                        plotfile: '{root.calplotdir}/prim.Df1_amp.png'
+                  
+            plot2-prim-Df1:
+                  _use: lib.steps.inspect.gains.prim.prim-Df1
+                  info: Plot leakage solutions-phase
+                  params:
+                        yaxis: 'phase'
+                        plotfile: '{root.calplotdir}/prim.Df1_phase.png'
+                        
+            plot3-prim-Df1:
+                  _use: lib.steps.inspect.gains.prim.prim-Df1
+                  info: Plot leakage solutions-amplitude
+                  params:
+                        yaxis: 'real'
+                        plotfile: '{root.calplotdir}/prim.Df1_real.png'
+                        
+            plot1-prim-K2:
+                  _use: lib.steps.inspect.gains.prim.prim-K2
+                  info: Plot delay calibration solutions
+                  params:
+                        xaxis: 'antenna1'
+                        plotfile: '{root.calplotdir}/prim.K2-antenna1.png'
+                        
+            plot2-prim-K2:
+                  _use: lib.steps.inspect.gains.prim.prim-K2
+                  info: Plot delay calibration solutions
+                  params:
+                        xaxis: 'time'
+                        plotfile: '{root.calplotdir}/prim.K2-time.png'
+                        
+            prim-flag-summary:
+                  _use: lib.steps.flagdata.flag-summary.calibrators
+                  info: Generate a summary of flagged data after primary calibration
+                  params: 
+                        field: '{root.bpcal-field}'
+             
+            prim-calflags2:
+                  _use: lib.steps.flagdata.save-flags.calibrators
+                  info: Back up flags after primary calibration 
+                  params:
+                        versionname: post_bpcalflags
+                        
+    inspect-sec:
+      name: inspect-sec
+      info: A recipe for inspecting secondary gain solutions
+      
+      assign:
+            dirs.base: .
+            dirs.temp: '{config.run.env.HOME}/tmp'
+            log.dir: '{root.logdir}/log-{config.run.datetime}'
+            
+      inputs:
+            field:
+                 dtype: str 
+            
+      steps:
+       
+            plot1-sec-Gp0:
+                  _use: lib.steps.inspect.gains.sec.sec-Gp0
+                  info: Plotting Gain phase calibration solutions
+                  params:
+                        xaxis: 'antenna1'
+                        plotfile: '{root.calplotdir}/sec.Gp0-antenna1.png'
+                        
+            plot2-sec-Gp0:
+                  _use: lib.steps.inspect.gains.sec.sec-Gp0
+                  info: Plotting Gain phase calibration solutions
+                  params:
+                        xaxis: 'time'
+                        plotfile: '{root.calplotdir}/sec.Gp0-time.png'
+                        
+            plot1-sec-Ga0:
+                  _use: lib.steps.inspect.gains.sec.sec-Ga0
+                  info: Plotting Gain phase calibration solutions
+                  params:
+                        xaxis: 'antenna1'
+                        plotfile: '{root.calplotdir}/sec.Ga0-antenna1.png'
+                        
+            plot2-sec-Ga0:
+                  _use: lib.steps.inspect.gains.sec.sec-Ga0
+                  info: Plotting Gain phase calibration solutions
+                  params:
+                        xaxis: 'time'
+                        plotfile: '{root.calplotdir}/sec.Ga0-time.png'
+                        
+            plot1-sec-Gp1:
+                  _use: lib.steps.inspect.gains.sec.sec-Gp1
+                  info: Plotting Gain phase calibration solutions
+                  params:
+                        xaxis: 'antenna1'
+                        plotfile: '{root.calplotdir}/sec.Gp1-antenna1.png'
+                        
+            plot2-sec-Gp1:
+                  _use: lib.steps.inspect.gains.sec.sec-Gp1
+                  info: Plotting Gain phase calibration solutions
+                  params:
+                        xaxis: 'time'
+                        plotfile: '{root.calplotdir}/sec.Gp1-time.png'
+                        
+            plot1-sec-Ga1:
+                  _use: lib.steps.inspect.gains.sec.sec-Ga1
+                  info: Plotting Gain phase calibration solutions
+                  params:
+                        xaxis: 'antenna1'
+                        plotfile: '{root.calplotdir}/sec.Ga1-antenna1.png'
+                        
+            plot2-sec-Ga1:
+                  _use: lib.steps.inspect.gains.sec.sec-Ga1
+                  info: Plotting Gain phase calibration solutions
+                  params:
+                        xaxis: 'time'
+                        plotfile: '{root.calplotdir}/sec.Ga1-time.png'
+                        
+            plot1-Sec-F0:
+                  _use: lib.steps.inspect.gains.sec.sec-F0
+                  info: Plot Gain phase calibration solutions
+                  params:
+                        xaxis: 'time'
+                        plotfile: '{root.calplotdir}/sec.F0-time.png'
+                        
+            plot2-Sec-F0:
+                  _use: lib.steps.inspect.gains.sec.sec-F0
+                  info: Plot Gain phase calibration solutions
+                  params:
+                        xaxis: 'antenna1'
+                        plotfile: '{root.calplotdir}/sec.F0-antenna1.png'
+                        
+            sec-flag-summary:
+                  _use: lib.steps.flagdata.flag-summary.calibrators
+                  info: Generate a summary of flagged data after Secondary calibration
+                  params: 
+                       field:   '{root.gcal-field}'
+             
+            sec-calflags2:
+                  _use: lib.steps.flagdata.save-flags.calibrators
+                  info: Back up flags after performing secondary calibration. 
+                  params:
+                        versionname: post_gcalflags 
+                        
+    inspect-pol:
+      name: inspect-pol
+      info: A recipe for inspecting polarization gain solutions
+      
+      assign:
+            dirs.base: .
+            dirs.temp: '{config.run.env.HOME}/tmp'
+            log.dir: '{root.logdir}/log-{config.run.datetime}'
+            
+      inputs:
+            field:
+                 dtype: str 
+            
+      steps:
+      
+            plot1-Pol-Gp0:
+                  _use: lib.steps.inspect.gains.pol.pol-Gp0
+                  info: Plot Gain phase calibration solutions
+                  params:
+                        xaxis: 'time'
+                        plotfile: '{root.calplotdir}/pol.Gp0-time.png'
+            
+            plot2-Pol-Gp0:
+                  _use: lib.steps.inspect.gains.pol.pol-Gp0
+                  info: Plot Gain phase calibration solutions
+                  params:
+                        xaxis: 'antenna1'
+                        plotfile: '{root.calplotdir}/pol.Gp0-antenna1.png'
+                        
+            plot1-pol-KCROSS:
+                  _use: lib.steps.inspect.gains.pol.pol-KCROSS
+                  info: Plot cross-hand delay calibration solutions
+                  params:
+                        xaxis: 'time'
+                        plotfile: '{root.calplotdir}/pol.KCROSS-time.png'
+                        
+            plot2-pol-KCROSS:
+                  _use: lib.steps.inspect.gains.pol.pol-KCROSS
+                  info: Plot cross-hand delay calibration solutions
+                  params:
+                        xaxis: 'antenna1'
+                        plotfile: '{root.calplotdir}/pol.KCROSS-antenna1.png'
+                        
+            plot-Pol-Xf:
+                  _use: lib.steps.inspect.gains.pol.pol-Xf
+                  info: Plot cross-hand phase calibration solutions
+                  params:
+                        yaxis: 'phase' 
+                        plotfile: '{root.calplotdir}/pol.Xf.png'
+                        
+            plot-Pol-Xf1:
+                  _use: lib.steps.inspect.gains.pol.pol-Xf1
+                  info: Plot cross-hand phase calibration solutions
+                  params:
+                        yaxis: 'phase' 
+                        plotfile: '{root.calplotdir}/pol.Xf1.png'
+                        
+            pol-flag-summary:
+                  _use: lib.steps.flagdata.flag-summary.calibrators
+                  info: Generate a summary of flagged data after Polarization calibration
+                  params: 
+                        field: '{root.xcal-field}'
+                 
+            pol-calflags2:
+                  _use: lib.steps.flagdata.save-flags.calibrators
+                  info: Back up original flags
+                  params: 
+                        versionname: post_xcalflags  
+            
+            
+    inspect-vis:
+      name: inspect-vis
+      info: A recipe for inspecting polarization calibration solutions
+      
+      assign:
+            dirs.base: .
+            dirs.temp: '{config.run.env.HOME}/tmp'
+            log.dir: '{root.logdir}/log-{config.run.datetime}'
+            
+      inputs:
+            field:
+                 dtype: str 
+            
+      steps:
+            
+            plot-ampuvdist:
+                  _use: lib.steps.inspect.visibilities.ampuvdist
+                  info: Plot amplitude against UVdist  
+                  params:
+                        iter-field: true 
+                        suffix: 'ampuvdist'
+                  
+            plot-phaseuvdist:
+                  _use: lib.steps.inspect.visibilities.phaseuvdist
+                  info: Plot phase against UVdist  
+                  params:
+                        iter-field: true 
+                        suffix: 'phaseuvdist'
+                    
+            plot-phasefreq:
+                  _use: lib.steps.inspect.visibilities.phasefreq
+                  info: Plot phase against frequency  
+                  params:
+                        iter-field: true 
+                        suffix: 'phasefreq'
+                    
+            plot-realfreq:
+                  _use: lib.steps.inspect.visibilities.realfreq
+                  info: Plot real against frequency  
+                  params:
+                        iter-field: true 
+                        suffix: 'realfreq'
+                    
+            plot1-ampfreq:
+                  _use: lib.steps.inspect.visibilities.ampfreq.corrected.calibrators
+                  info: Plot amplitude against frequency 
+                  params:
+                        iter-field: true 
+                        corr: 'XX,YY'
+                        suffix: 'ampfreq'
+                    
+            plot2-ampfreq:
+                  _use: lib.steps.inspect.visibilities.ampfreq.corrected.calibrators
+                  info: Plot amplitude against frequency  
+                  params:
+                        iter-field: true 
+                        corr: 'XY,YX'
+                        suffix: 'ampfreq'
+                    
+            plot-ampphase:
+                  _use: lib.steps.inspect.visibilities.ampphase
+                  info: Plot amplitude against phase  
+                  params:
+                        iter-field: true 
+                        suffix: 'ampphase'
+                    
+            plot1-normballs:
+                  _use: lib.steps.inspect.visibilities.normballs
+                  info: Plot real against imaginary
+                  params:
+                        corr: 'XX' 
+                        iter-field: true  
+                        suffix: 'normballs' 
+                    
+            plot2-normballs:
+                  _use: lib.steps.inspect.visibilities.normballs
+                  info: Plot real against imaginary 
+                  params:
+                        corr: 'YY' 
+                        iter-field: true  
+                        suffix: 'normballs'  
+                                              
+            plot1-phaseballs:
+                  _use: lib.steps.inspect.visibilities.phaseballs
+                  info: Plot real against imaginary
+                  params:
+                        corr: 'XX,YY'
+                        iter-field: true 
+                        colour-by: 'ANTENNA1' 
+                        suffix: 'phaseballs'
+                    
+            plot2-phaseballs:
+                  _use: lib.steps.inspect.visibilities.phaseballs
+                  info: Plot real against imaginary 
+                  params:
+                        corr: 'XY,YX'
+                        iter-field: true 
+                        colour-by: 'ANTENNA1' 
+                        suffix: 'phaseballs'  
+                     
+            plot3-phaseballs:
+                  _use: lib.steps.inspect.visibilities.phaseballs
+                  info: Plot real against imaginary  
+                  params:
+                        corr: 'IQUV' 
+                        iter-field: true 
+                        colour-by: 'CORR'
+                        suffix: 'phaseballs-IQUV' 
+                    
+            plot1-baseline:
+                  _use: lib.steps.inspect.visibilities.freqbaseline
+                  info: Plot frequency against baseline
+                  params:
+                        colour-by: 'amp'
+                        iter-field: true 
+                        suffix: 'freqbaseline' 
+                    
+            plot2-baseline:
+                  _use: lib.steps.inspect.visibilities.ampbaseline
+                  info: Plot Amplitude against Baseline
+                  params:
+                        iter-field: true 
+                        colour-by: 'ANTENNA1'
+                        suffix: 'ampbaseline'   
+                          
+            plot1-UV:
+                  _use: lib.steps.inspect.visibilities.uv
+                  info: Plot V against U
+                  params:
+                        iter-field: true 
+                        colour-by: 'amp'
+                        suffix: 'UV-amp' 
+                    
+            plot2-UV:
+                  _use: lib.steps.inspect.visibilities.uv
+                  info: Plot V against U
+                  params:
+                        cmax: 5
+                        cmin: -5
+                        iter-field: true 
+                        colour-by: 'phase'
+                        suffix: 'UV-phase'  
+         
+           

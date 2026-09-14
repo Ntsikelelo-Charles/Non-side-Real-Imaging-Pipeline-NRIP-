@@ -1,0 +1,124 @@
+lib:
+   params:
+      calibration:
+      
+         base:
+            selectdata: true
+            refant: '{recipe.cal_refant}'
+            ms: '{recipe.msdir}/calibrators.ms'
+            
+         clearcal:
+            spw: ''
+            
+         bandpass:
+            minsnr: 3
+            bandtype: 'B'
+            append: false
+            solnorm: false
+            minblperant: 4
+            parang: false
+            field: '{recipe.bpcal-field}'
+            uvrange: '{recipe.cal_uvrange}'
+            _use: lib.params.calibration.base
+            fillgaps: '{recipe.casa_bandpass_fillgaps}'
+    
+         gaincal:
+         
+            base:
+               minsnr: 3
+               preavg: -1.0
+               minblperant: 4
+               _use: lib.params.calibration.base
+               
+            delay:
+               uvrange: ''
+               calmode: 'ap'
+               gaintype: 'K'
+               parang: false
+               _use: lib.params.calibration.gaincal.base
+               
+            phase:
+               calmode: 'p'
+               gaintype: 'G'
+               parang: false
+               uvrange: '{recipe.cal_uvrange}'
+               _use: lib.params.calibration.gaincal.base
+               
+            amplitude: 
+               calmode: 'a'
+               gaintype: 'G'
+               parang: false
+               uvrange: '{recipe.cal_uvrange}'
+               _use: lib.params.calibration.gaincal.base
+            
+         polcal:
+         
+            base:
+               minsnr: 3
+               preavg: 300.0
+               minblperant: 4
+               _use: lib.params.calibration.base 
+               
+            phase:
+               calmode: 'p'
+               parang: true
+               gaintype: 'G'
+               field: '{recipe.xcal-field}'
+               uvrange: '{recipe.cal_uvrange}'
+               _use: lib.params.calibration.gaincal.base
+               
+            xdelay:
+               calmode: 'ap'
+               parang: true
+               gaintype: 'KCROSS'
+               field: '{recipe.xcal-field}'
+               uvrange: '{recipe.cal_uvrange}'
+               _use: lib.params.calibration.gaincal.base
+               
+            xphase:
+               poltype: 'Xf'
+               field: '{recipe.xcal-field}'
+               uvrange: '{recipe.cal_uvrange}'
+               _use: lib.params.calibration.polcal.base
+              
+            leakages:
+               _use: lib.params.calibration.polcal.base 
+               poltype: 'Df'
+               field: '{recipe.bpcal-field}'
+               uvrange: '{recipe.cal_uvrange}'     
+            
+         fluxscale:
+            append: false
+            display: true
+            incremental: false  
+            ms: '{recipe.msdir}/calibrators.ms'
+    
+         applycal:
+         
+            base:
+               uvrange: ''
+               flagbackup: true
+               selectdata: true
+               applymode: 'calflag'
+               
+            prim:  
+               field: '{recipe.bpcal-field}'
+               ms: '{recipe.msdir}/calibrators.ms'
+               _use: lib.params.calibration.applycal.base
+               
+            sec:
+               field: '{recipe.gcal-field}'
+               ms: '{recipe.msdir}/calibrators.ms'
+               _use: lib.params.calibration.applycal.base
+               
+            pol:
+               field: '{recipe.xcal-field}'
+               ms: '{recipe.msdir}/calibrators.ms'
+               _use: lib.params.calibration.applycal.base
+               
+            target:
+               field: '{recipe.target-field}'
+               ms: '{recipe.msdir}/target.ms'
+               _use: lib.params.calibration.applycal.base
+    
+   

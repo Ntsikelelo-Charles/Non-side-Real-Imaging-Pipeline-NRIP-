@@ -1,0 +1,75 @@
+lib:
+   params:
+      imaging:
+      
+         breizorro:
+            boxsize: '{recipe.breizorro_boxsize}'
+            dilate: '{recipe.breizorro_dilate}'
+            
+            
+         crystalball:
+            output-column: 'MODEL_DATA'
+            num-sources: '{recipe.crystallball_num-sources}'
+            memory-fraction: '{recipe.crystallball_memory-fraction}'
+            
+         setjy:
+            usescratch: true
+            scalebychan: true
+            
+         wsclean:
+            base:
+               mem: 100
+               abs-mem: 100
+               padding: 1.5
+               verbose: true
+               log-time: true
+               gridder: wgridder
+               model-column: MODEL_DATA
+               wstack-nwlayers-factor: 3
+               size: '{recipe.wsclean_size}'
+               ms: '{recipe.msdir}/target.ms'
+               scale: '{recipe.wsclean_scale}'
+               nchan: '{recipe.wsclean_nchan}'
+               temp-dir: '{recipe.imdir}/temp'
+               weight: '{recipe.wsclean_weight}'
+               
+            image:
+               pol: I
+               gain: 0.1
+               mgain: 0.85
+               threads: 128
+               niter: 1000000
+               join-channels: true
+               fit-spectral-pol: 2
+               fit-beam: true
+               save-source-list: true
+               elliptical-beam: true
+               no-update-model-required: true
+               auto-threshold: '{recipe.wsclean_auto-threshold}'
+               parallel-gridding: '{recipe.wsclean_parallel-gridding}'
+               #auto-mask: =IFSET(current.fits-mask, UNSET, recipe.wsclean_auto_mask)
+               _use: lib.params.imaging.wsclean.base
+               
+            image-pol:
+               pol: IQUV
+               fit-spectral-pol: 4
+               save-source-list: false
+               join-polarizations: true
+               _use: lib.params.imaging.wsclean.image
+              
+            predict:
+               pol: I
+               predict: true
+               _use: lib.params.imaging.wsclean.base
+     
+            predict-pol:
+               pol: IQUV
+               predict: true
+               _use: lib.params.imaging.wsclean.base
+     
+     
+   
+   
+   
+    
+   

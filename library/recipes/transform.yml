@@ -1,0 +1,130 @@
+lib:
+  recipes:
+  
+    transform-cals:
+      name: transform-cals
+      info: A recipe for transforming and editting calibrator-only ms
+      
+      assign:
+            dirs.base: .
+            dirs.temp: '{config.run.env.HOME}/tmp'
+            log.dir: '{root.logdir}/log-{config.run.datetime}'
+            
+      inputs:
+            field:
+                  dtype: str 
+            
+      steps:
+      
+            plotants:
+                  _use: lib.steps.prepdata.plotants
+                  info: Plot the antenna distribution in the local reference frame. 
+                  params:
+                        logpos: true 
+                        
+            elevation:
+                  _use: lib.steps.prepdata.elevation
+                  info: Plot the elevation of the sources 
+                  params:
+                        plotfile: '{root.obsdir}/elevation-tracks.png' 
+                        
+            split-cals:
+                  _use: lib.steps.prepdata.transform.calibrators
+                  info: Split the  original ms to calibrators fields-only ms
+                  params:
+                        scan: '{root.casa_mstransform_cals_scan}'
+                        
+            obsinfo-cals:
+                  _use: lib.steps.prepdata.listobs.calibrators
+                  info: Generate the observation information of the calibrator-only ms
+                  params:
+                        listfile: '{root.obsdir}/obsinfo.cals.txt' 
+               
+            obsflags-cals:
+                  _use: lib.steps.prepdata.flag-summary.calibrators
+                  info: Check flagged data from the observatory
+                  params: 
+                        field: '{root.bpcal-field},{root.gcal-field},{root.xcal-field}' 
+                        
+            save-flags:
+                  _use: lib.steps.prepdata.save-flags.calibrators
+                  info: Back up original flags from the observatory.  
+                  params:
+                        versionname: observatory_flags 
+                        
+            restore-flags:
+                  _use: lib.steps.prepdata.restore-flags.calibrators
+                  info: Restore the original flags from the observatory
+                  params:
+                        versionname: observatory_flags
+                 
+            swap-labels:
+                  _use: lib.steps.prepdata.prepkat.calibrators
+                  info: 'Swap feed labels and set feed angle to zero'
+                  params:
+                        ms_path: '{root.msdir}/calibrators.ms'
+                  
+            clearcal-cals:
+                  _use: lib.steps.prepdata.clearcal.calibrators
+                  info: Re-initialize calibrated visibility data in the calibrator-only ms
+                  params:
+                        addmodel: true 
+                        
+    transform-target:
+      name: transform-target
+      info: A recipe for transforming and editting target-only ms
+      
+      assign:
+            dirs.base: .
+            dirs.temp: '{config.run.env.HOME}/tmp'
+            log.dir: '{root.logdir}/log-{config.run.datetime}'
+            
+      inputs:
+            field:
+                  dtype: str 
+            
+      steps:
+            
+            split-target:
+                  _use: lib.steps.prepdata.transform.target
+                  info: Split original ms to target fields-only ms
+                  params:
+                        scan: '{root.casa_mstransform_target_scan}'
+                   
+            obsinfo-target:
+                  _use: lib.steps.prepdata.listobs.target
+                  info: List observation information of the split target field.
+                  params:
+                        listfile: '{root.obsdir}/obsinfo.target.txt'
+                        
+            obsflags-target:
+                  _use: lib.steps.prepdata.flag-summary.target
+                  info: Check flagged data from the observatory
+                  params: 
+                        field: '{root.target-field}'
+                        
+            save2-obsflags:
+                  _use: lib.steps.prepdata.save-flags.target
+                  info: Back up original flags from the observatory
+                  params: 
+                        versionname: observatory_flags 
+                        
+            restore2-obsflags:
+                  _use: lib.steps.prepdata.restore-flags.target
+                  info: Restore the original flags from the observatory
+                  params:
+                        versionname: observatory_flags   
+                     
+            swap2-labels:
+                  _use: lib.steps.prepdata.prepkat.target
+                  info: 'Swap feed labels and set feed angle to zero'
+                  params:
+                        ms_path: '{root.msdir}/target.ms' 
+                        
+            clearcal-target:
+                  _use: lib.steps.prepdata.clearcal.target
+                  info: Re-initialize calibrated visibility data in target ms
+                  params:
+                        addmodel: true 
+            
+            

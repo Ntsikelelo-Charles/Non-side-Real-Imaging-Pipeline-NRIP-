@@ -1,0 +1,273 @@
+lib:
+   steps:
+      inspect:
+         gains:
+            prim:
+            
+               prim-K0:
+                  cab: casa.plotms
+                  params:
+                     ms: '{root.caldir}/prim.K0' 
+                     _use: lib.params.visualization.plotms.delay
+                  
+               prim-K1:
+                  cab: casa.plotms
+                  params:
+                     ms: '{root.caldir}/prim.K1' 
+                     _use: lib.params.visualization.plotms.delay
+                  
+               prim-K2:
+                  cab: casa.plotms
+                  params:
+                     ms: '{root.caldir}/prim.K2' 
+                     _use: lib.params.visualization.plotms.delay
+                      
+               prim-Gp0:
+                  cab: casa.plotms
+                  params:
+                     ms: '{root.caldir}/prim.Gp0'
+                     _use: lib.params.visualization.plotms.phase
+                  
+               prim-Gp1:
+                  cab: casa.plotms
+                  params:
+                     ms: '{root.caldir}/prim.Gp1'
+                     _use: lib.params.visualization.plotms.phase
+                       
+               prim-Ga0:
+                  cab: casa.plotms
+                  params:
+                     ms: '{root.caldir}/prim.Ga0' 
+                     _use: lib.params.visualization.plotms.amplitude
+                  
+               prim-Ga1:
+                  cab: casa.plotms
+                  params:
+                     ms: '{root.caldir}/prim.Ga1' 
+                     _use: lib.params.visualization.plotms.amplitude
+                    
+               prim-B0:
+                  cab: casa.plotms
+                  params:
+                     ms: '{root.caldir}/prim.B0' 
+                     _use: lib.params.visualization.plotms.bandpass 
+                  
+               prim-B1:
+                  cab: casa.plotms
+                  params:
+                     ms: '{root.caldir}/prim.B1'
+                     _use: lib.params.visualization.plotms.bandpass   
+                  
+               prim-Df0:
+                  cab: casa.plotms
+                  params:
+                     ms: '{root.caldir}/prim.Df0' 
+                     _use: lib.params.visualization.plotms.leakages
+                  
+               prim-Df1:
+                  cab: casa.plotms
+                  params:
+                     ms: '{root.caldir}/prim.Df1' 
+                     _use: lib.params.visualization.plotms.leakages
+            sec:
+            
+               sec-Gp0:
+                  cab: casa.plotms
+                  params:
+                     ms: '{root.caldir}/sec.Gp0'
+                     _use: lib.params.visualization.plotms.phase
+                  
+               sec-Gp1:
+                  cab: casa.plotms
+                  params:
+                     ms: '{root.caldir}/sec.Gp1'
+                     _use: lib.params.visualization.plotms.phase
+                        
+               sec-Ga0:
+                  cab: casa.plotms
+                  params:
+                     ms: '{root.caldir}/sec.Ga0'
+                     _use: lib.params.visualization.plotms.amplitude
+                  
+               sec-Ga1:
+                  cab: casa.plotms
+                  params:
+                     ms: '{root.caldir}/prim.Ga1'
+                     _use: lib.params.visualization.plotms.amplitude
+                  
+               sec-F0:
+                  cab: casa.plotms
+                  params:
+                     ms: '{root.caldir}/sec.F0'
+                     _use: lib.params.visualization.plotms.amplitude
+            
+            pol:
+          
+               pol-Gp0:
+                  cab: casa.plotms
+                  params:
+                     ms: '{root.caldir}/pol.Gp0'
+                     _use: lib.params.visualization.plotms.phase
+                  
+               pol-KCROSS:
+                  cab: casa.plotms
+                  params:
+                     ms: '{root.caldir}/pol.KCROSS'
+                     _use: lib.params.visualization.plotms.xdelay
+                  
+               pol-Xf:
+                  cab: casa.plotms
+                  params:
+                     ms: '{root.caldir}/pol.Xf'
+                     _use: lib.params.visualization.plotms.xphase
+                  
+               pol-Xf1:
+                  cab: casa.plotms
+                  params:
+                     ms: '{root.caldir}/pol.Xf1'
+                     _use: lib.params.visualization.plotms.xphase    
+                  
+         visibilities:
+         
+            freqbaseline:
+               cab: shadems
+               params:
+                  _use: lib.params.visualization.shadems.freqbaseline
+                      
+            ampbaseline:
+               cab: shadems
+               params:
+                  _use: lib.params.visualization.shadems.ampbaseline
+                          
+            ampphase:
+               cab: shadems
+               params:
+                  corr: 'XX,YY'
+                  _use: lib.params.visualization.shadems.ampphase
+                       
+            phaseballs:
+               cab: shadems
+               params:
+                  _use: lib.params.visualization.shadems.phaseballs   
+                    
+            normballs:
+               cab: shadems
+               params:
+                  _use: lib.params.visualization.shadems.normballs   
+                  
+            phaseuvdist:
+               cab: shadems
+               params:
+                  corr: 'XX,YY'
+                  _use: lib.params.visualization.shadems.phaseuvdist
+                      
+            ampuvdist:
+               cab: shadems
+               params:
+                  corr: 'XX,YY'
+                  _use: lib.params.visualization.shadems.ampuvdist
+                  
+            realfreq:
+               cab: shadems
+               params:
+                  corr: 'IQUV'
+                  _use: lib.params.visualization.shadems.realfreq
+                   
+            phasefreq:
+               cab: shadems
+               params:
+                  corr: 'XX,YY'
+                  _use: lib.params.visualization.shadems.phasefreq
+                      
+            uv:
+               cab: shadems
+               params:
+                  _use: lib.params.visualization.shadems.uv    
+                        
+            ampfreq:
+            
+               data:
+               
+                  calibrators:
+                     cab: shadems
+                     params:
+                        iter-field: true 
+                        dir: '{recipe.flagsdir}'
+                        ms: '{recipe.msdir}/calibrators.ms'
+                        field: '{recipe.bpcal-field},{recipe.gcal-field},{recipe.xcal-field}'
+                        _use: lib.params.visualization.shadems.ampfreq.data
+                              
+                  target:
+                     cab: shadems
+                     params:
+                        dir: '{recipe.flagsdir}'
+                        field: '{recipe.target-field}'
+                        ms: '{recipe.msdir}/target.ms'
+                        _use: lib.params.visualization.shadems.ampfreq.data
+                        
+               corrected:
+                
+                  calibrators:
+                     cab: shadems
+                     params:
+                        _use: lib.params.visualization.shadems.ampfreq.corrected
+                          
+            amptime:
+            
+               data:
+               
+                  calibrators:
+                     cab: casa.plotms
+                     params:
+                        ydatacolumn: 'data'
+                        xdatacolumn: 'data'
+                        field: '{recipe.bpcal-field}' 
+                        ms: '{recipe.msdir}/calibrators.ms'
+                        plotfile: '{recipe.flagsdir}/amptime-cals.png'
+                        _use: lib.params.visualization.plotms.amptime
+                              
+                  target:
+                     cab: casa.plotms
+                     params:
+                        coloraxis: 'corr'
+                        ydatacolumn: 'data'
+                        xdatacolumn: 'data'
+                        field: '{recipe.target-field}'
+                        ms: '{recipe.msdir}/target-corr.ms'
+                        _use: lib.params.visualization.plotms.amptime
+                        
+               corrected:
+               
+                  calibrators:
+                     cab: casa.plotms
+                     params:
+                        coloraxis: 'antenna1'
+                        ydatacolumn: 'corrected'
+                        xdatacolumn: 'corrected'
+                        ms: '{recipe.msdir}/calibrators.ms'
+                        _use: lib.params.visualization.plotms.amptime
+                        
+                      
+    
+    
+                              
+               
+                     
+                     
+    
+    
+    
+      
+    
+   
+   
+   
+   
+   
+   
+   
+  
+    
+   
+   
+

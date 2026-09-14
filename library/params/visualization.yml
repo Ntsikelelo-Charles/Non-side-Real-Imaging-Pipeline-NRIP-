@@ -1,0 +1,192 @@
+lib:
+   params:
+      visualization:
+      
+         plotants:
+            showgui: false
+            ms: '{root.ms_path}'
+            title: 'Antenna Layout Plot'
+            figfile: '{root.antdir}/antenna.png'
+            
+         plotms:
+         
+            base:
+              showgui: false
+              overwrite: true
+              clearplots: true
+              selectdata: true
+              ms: '{root.msdir}/calibrators.ms'
+              
+            delay:
+               yaxis: 'delay'
+               coloraxis: 'antenna1'
+               _use: lib.params.visualization.plotms.base
+               
+            phase:
+               yaxis: 'phase'
+               coloraxis: 'antenna1'
+               _use: lib.params.visualization.plotms.base
+               
+            amplitude:
+               yaxis: 'amp'
+               coloraxis: 'antenna1'
+               _use: lib.params.visualization.plotms.base
+               
+            bandpass:
+               xaxis: 'freq'
+               coloraxis: 'corr'
+               _use: lib.params.visualization.plotms.base
+               
+            leakages:
+               xaxis: 'freq'
+               coloraxis: 'corr'
+               _use: lib.params.visualization.plotms.base
+               
+            xdelay:
+               yaxis: 'delay'
+               coloraxis: 'corr'
+               _use: lib.params.visualization.plotms.base
+               
+            xphase:
+               xaxis: 'freq'
+               coloraxis: 'corr'
+               _use: lib.params.visualization.plotms.base
+               
+            elevation:
+               xaxis: 'time'
+               yaxis: 'elevation'
+               coloraxis: 'field'
+               ydatacolumn: 'data'
+               xdatacolumn: 'data'
+               avgchannel: '4096'
+               title: 'Elevation against Time'
+               _use: lib.params.visualization.plotms.base
+               field: '{root.bpcal-field},{root.gcal-field},{root.xcal-field},{root.target-field}' 
+               
+            amptime:
+               xaxis: 'time'
+               yaxis: 'amp'
+               correlation: 'XY,YX'
+               avgchannel: '9999999'
+               uvrange: '{root.cal_uvrange}'
+               title: 'Amplitude against Time'
+               _use: lib.params.visualization.plotms.base    
+            
+         shadems:
+         
+            base:
+              cnum: 100
+              col: 'CORRECTED_DATA'
+              ms: '{root.msdir}/calibrators.ms'
+              
+            ampphase:
+               yaxis: 'amp'
+               xaxis: 'phase'
+               colour-by: 'ANTENNA1'
+               dir: '{root.spectradir}'
+               title: 'Amplitude against Phase'
+               _use: lib.params.visualization.shadems.base
+               
+            ampfreq:
+            
+               data:
+                  cnum: 100
+                  col: 'DATA'
+                  yaxis: 'amp'
+                  corr: 'XY,YX'
+                  xaxis: 'FREQ'
+                  title: 'Amplitude against Frequency'
+                  
+               corrected:
+                  yaxis: 'amp'
+                  xaxis: 'FREQ'
+                  colour-by: 'ANTENNA1'
+                  dir: '{root.spectradir}'
+                  title: 'Amplitude against Frequency'
+                  _use: lib.params.visualization.shadems.base
+               
+            amptime: 
+               corrected:
+                  yaxis: 'amp'
+                  xaxis: 'TIME'
+                  colour-by: 'ANTENNA1'
+                  dir: '{root.spectradir}'
+                  title: 'Amplitude against Time'
+                  _use: lib.params.visualization.shadems.base
+               
+            ampbaseline:
+               yaxis: 'amp'
+               xaxis: 'BASELINE_M'
+               dir: '{root.baselinedir}'
+               title: 'Amplitude against Baseline'
+               _use: lib.params.visualization.shadems.base
+               
+            ampuvdist:
+               xaxis: 'UV'
+               yaxis: 'amp'
+               colour-by: 'ANTENNA1'
+               dir: '{root.uvdistdir}'
+               title: 'Amplitude against UV Distance'
+               _use: lib.params.visualization.shadems.base
+               
+            freqbaseline:
+               yaxis: 'FREQ'
+               xaxis: 'BASELINE_M'
+               dir: '{root.baselinedir}'
+               title: 'Frequency against Baseline'
+               _use: lib.params.visualization.shadems.base
+               
+            phaseuvdist:
+               xaxis: 'UV'
+               yaxis: 'phase'
+               colour-by: 'ANTENNA1'
+               dir: '{root.uvdistdir}'
+               title: 'Phase against UV Distance'
+               _use: lib.params.visualization.shadems.base
+               
+            realfreq:
+               xaxis: 'FREQ'
+               yaxis: 'real'
+               colour-by: 'CORR'
+               dir: '{root.spectradir}'
+               title: 'Real against Frequency'
+               _use: lib.params.visualization.shadems.base
+               
+            phasefreq:
+               xaxis: 'FREQ'
+               yaxis: 'phase'
+               colour-by: 'ANTENNA1'
+               dir: '{root.spectradir}'
+               title: 'Phase against Frequency'
+               _use: lib.params.visualization.shadems.base
+               
+            phaseballs:
+               yaxis: 'imag'
+               xaxis: 'real'
+               colour-by: 'ANTENNA1'
+               dir: '{root.phaseballsdir}'
+               title: 'Real against Imaginary (CORRECTED_DATA)'
+               _use: lib.params.visualization.shadems.base
+               
+            normballs:
+               cnum: 100
+               yaxis: 'imag'
+               xaxis: 'real'
+               colour-by: 'ANTENNA1'
+               dir: '{root.normballsdir}'
+               col: 'CORRECTED_DATA/MODEL_DATA'
+               ms: '{root.msdir}/calibrators.ms'
+               title: 'Real against Imaginary (CORRECTED_DATA/MODEL_DATA)'
+               
+            uv:
+               xaxis: 'U'
+               yaxis: 'V' 
+               title: 'V against U' 
+               col: 'CORRECTED_DATA'
+               dir: '{root.uvdistdir}'
+               _use: lib.params.visualization.shadems.base
+  
+   
+    
+   
+   

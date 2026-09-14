@@ -1,0 +1,23 @@
+lib:
+   params:
+      manipulation:
+      
+         mstransform:
+            nspw: 1
+            nchan: -1
+            reindex: true
+            mode: 'channel'
+            hanning: false
+            regridms: false
+            keepflags: true
+            numsubms: 'auto'
+            createmms: false
+            chanaverage: false
+            realmodelcol: true
+            usewtspectrum: true
+            denoising_lib: true
+            separationaxis: 'auto'
+            interpolation: 'linear'
+            
+   
+   

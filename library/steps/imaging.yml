@@ -1,0 +1,83 @@
+lib:
+   steps: 
+   
+      imaging:
+      
+         clean1:
+            cab: wsclean
+            params:
+               prefix: '{recipe.imdir}/1gc'
+               _use:  lib.params.imaging.wsclean.image
+               
+         clean2:
+            cab: wsclean
+            params:
+               prefix: '{recipe.imdir}/2gc'
+               _use:  lib.params.imaging.wsclean.image
+               
+         clean-pol:
+            cab: wsclean
+            params:
+               prefix: '{recipe.imdir}/3gc'
+               _use: lib.params.imaging.wsclean.image-pol
+           
+         clean1-masked:
+            cab: wsclean
+            params:
+               prefix: '{recipe.imdir}/1gc'
+               fits-mask: '{recipe.imdir}/1gc-MASK.fits'
+               _use:  lib.params.imaging.wsclean.image
+           
+         clean2-masked:
+            cab: wsclean
+            params:
+               prefix: '{recipe.imdir}/2gc'
+               fits-mask: '{recipe.imdir}/2gc-MASK.fits'
+               _use:  lib.params.imaging.wsclean.image
+               
+         clean-pol-masked:
+            cab: wsclean
+            params:
+               prefix: '{recipe.imdir}/3gc.MASKED'
+               fits-mask: '{recipe.imdir}/3gc-MASK.fits'
+               _use: lib.params.imaging.wsclean.image-pol
+              
+         predict:
+            cab: wsclean
+            params:
+               prefix: '{recipe.imdir}/1gc'
+               _use: lib.params.imaging.wsclean.predict
+               
+         predict-pol:
+            cab: wsclean
+            params:
+               prefix: '{recipe.imdir}/3gc'
+               _use: lib.params.imaging.wsclean.predict-pol
+           
+         mask1:
+            cab: breizorro
+            params:
+               _use: lib.params.imaging.breizorro
+               outfile: '{recipe.imdir}/1gc-MASK.fits'
+               restored-image: '{recipe.imdir}/1gc-MFS-image.fits' 
+               
+         mask2:
+            cab: breizorro
+            params:
+               _use: lib.params.imaging.breizorro
+               outfile: '{recipe.imdir}/2gc-MASK.fits'
+               restored-image: '{recipe.imdir}/2gc-MFS-image.fits'
+               
+         mask-pol:
+            cab: breizorro
+            params:
+               _use: lib.params.imaging.breizorro
+               outfile: '{recipe.imdir}/3gc-MASK.fits'
+               restored-image: '{recipe.imdir}/2gc-MFS-image.fits'
+           
+    
+    
+ 
+     
+  
+ 

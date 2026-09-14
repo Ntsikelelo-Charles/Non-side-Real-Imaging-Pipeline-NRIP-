@@ -1,0 +1,360 @@
+lib:
+  recipes:
+  
+    flag-cals:
+      name: flag-cals
+      info: A recipe for flagging and inspecting calibrator-only ms
+      
+      assign:
+            dirs.base: .
+            dirs.temp: '{config.run.env.HOME}/tmp'
+            log.dir: '{root.logdir}/log-{config.run.datetime}'
+            
+      inputs:
+            field:
+                  dtype: str 
+            
+      steps:
+      
+            save-preflags:
+                  _use: lib.steps.flagdata.save-flags.calibrators
+                  info: Back up any flags before running flagdata
+                  params:
+                        versionname: pre_calflags
+               
+            flag-autocorr: 
+                  _use: lib.steps.flagdata.flag-manual.calibrators
+                  info: Flag auto correlations
+                  params: 
+                        autocorr: true
+                  
+            flag-shadow:
+                  _use: lib.steps.flagdata.flag-shadow.calibrators
+                  info: Flag shadowed antenna
+                  params:
+                        tolerance: '{root.casa_flagdata_tolerance}'
+                  
+            flag-elevation:
+                  _use: lib.steps.flagdata.flag-elevation.calibrators
+                  info: Flag antenna with pointing elevation outside the selected range
+                  params:
+                        lowerlimit: '{root.casa_flagdata_lowerlimit}'  
+                  
+            flag-inspect1:
+                  _use: lib.steps.flagdata.inspect-flags.amptime.calibrators
+                  info: Inspect amp-time plot for quack flagging
+                  params: 
+                        coloraxis: 'scan' 
+                  
+            flag-quack1:
+                  _use: lib.steps.flagdata.flag-quack.calibrators
+                  info:  Flag data at the start of the scans.
+                  params: 
+                        quackmode: 'beg'  
+                   
+            flag-quack2:
+                  _use: lib.steps.flagdata.flag-quack.calibrators
+                  info: Flag data at the end of the scans. 
+                  params: 
+                        quackmode: 'endb'
+                  
+            flag-zeros:
+                  _use: lib.steps.flagdata.flag-clip.data.zeros.calibrators
+                  info: Flag zero valued data. 
+                  params: 
+                        clipzeros: true
+                  
+            flag-extremes:
+                  _use: lib.steps.flagdata.flag-clip.data.extremes.calibrators
+                  info: Flag very extreme outliers
+                  params:
+                        clipminmax: [0.00,200.0]
+                  
+            flag-edges:
+                  _use: lib.steps.flagdata.flag-manual.calibrators
+                  info: Flag bandpass edges and galactic plane
+                  params: 
+                        spw:   '{root.casa_flagdata_bpassedges}' 
+                  
+            flag-summary1:
+                  _use: lib.steps.flagdata.flag-summary.calibrators
+                  info: Generate a summary of flagged data after basic flagging
+                  params: 
+                        field:   '{root.bpcal-field},{root.gcal-field},{root.xcal-field}'
+                  
+            save-basicflags:
+                  _use: lib.steps.flagdata.save-flags.calibrators
+                  info: Back up any flags before running RFI mask
+                  params:
+                        versionname: basic_flags
+            
+            flag-maskRFI:
+                  _use: lib.steps.flagdata.flag-manual.calibrators
+                  info: Mask known RFI regions (GSM and aviation,GPS,Galilleo,Irridium,Inmarsat,Afristar etc)
+                  params:
+                        spw: '{root.casa_flagdata_mask}'
+                        uvrange: '{root.casa_flagdata_uvrange}'    
+                    
+            flag-summary2:
+                  _use: lib.steps.flagdata.flag-summary.calibrators
+                  info: Generate a summary of flagged data after RFI masking
+                  params: 
+                        field: '{root.bpcal-field},{root.gcal-field},{root.xcal-field}' 
+                   
+            save-maskRFI:
+                  _use: lib.steps.flagdata.save-flags.calibrators
+                  info: Back up any flags before running autoflagdata
+                  params:
+                        versionname: maskRFI_flags
+         
+            flag-auto:
+                  _use: lib.steps.flagdata.flag-tricolour.calibrators
+                  info: Auto flag RFI using tricolour
+                  params:
+                        window-backend: 'numpy'
+                  
+            flag-summary3:
+                  _use: lib.steps.flagdata.flag-summary.calibrators
+                  info: Generate a summary of flagged data after auto-flag
+                  params: 
+                        field: '{root.bpcal-field},{root.gcal-field},{root.xcal-field}' 
+                  
+            save-autoflags:
+                  _use: lib.steps.flagdata.save-flags.calibrators
+                  info: Back up any flags after running autoflagdata
+                  params:
+                        versionname: auto_flags
+                  
+            inspect-flags2:
+                  _use: lib.steps.flagdata.inspect-flags.ampfreq.calibrators
+                  info: Inspect ampfreq plots for RFI spikes
+                  params:
+                        suffix: 'ampfreq-cals'  
+                 
+            flag-scan: 
+                  _use: lib.steps.flagdata.flag-manual.calibrators
+                  info: 'manually flag bad scans'
+                  params: 
+                        scan: '{root.casa_flagdata_scan}'
+                  skip: true
+                
+            flag-antenna: 
+                  _use: lib.steps.flagdata.flag-manual.calibrators
+                  info: 'manually flag bad antenna'
+                  params: 
+                        antenna: '{root.casa_flagdata_antenna}'
+                  skip: true
+                  
+            save-manualflags:
+                  _use: lib.steps.flagdata.save-flags.calibrators
+                  info: Back up any flags after manually flagging data
+                  params:
+                        versionname: manual_flags
+                  skip: true
+
+            inspect-flags3:
+                  _use: lib.steps.flagdata.inspect-flags.ampfreq.calibrators
+                  info: Plotting Amplitude against Frequency  for Primary calibrator fields
+                  params:
+                        suffix: 'ampfreq2-cals' 
+                  
+            flag-summary4:
+                  _use: lib.steps.flagdata.flag-summary.calibrators
+                  info: Generate a summary of flagged data after manually flagging other bad data
+                  params: 
+                        field:   '{root.bpcal-field},{root.gcal-field},{root.xcal-field}'
+                        
+            flag-stats1:
+               _use: lib.steps.flagdata.flag-stats.calibrators
+               info: Summary of flagged data using Rfinder
+               params: 
+                  field: '0'
+                  label: 'Prim'
+               skip: true
+                  
+            flag-stats2:
+               _use: lib.steps.flagdata.flag-stats.calibrators
+               info: Summary of flagged data using Rfinder
+               params: 
+                  field: '1'
+                  label: 'Sec'
+               skip: true
+                
+            save-postflags:
+                  _use: lib.steps.flagdata.save-flags.calibrators
+                  info: Back up original flags after flagdata. 
+                  params:
+                        versionname: post_calflags  
+  
+    flag-target:
+      name: flag-target
+      info: A recipe for flagging and inspecting target-only ms
+      
+      assign:
+            dirs.base: .
+            dirs.temp: '{config.run.env.HOME}/tmp'
+            log.dir: '{root.logdir}/log-{config.run.datetime}'
+            
+      inputs:
+            field:
+                  dtype: str 
+            
+      steps:
+      
+            # save2-preflags:
+            #       _use: lib.steps.flagdata.save-flags.target
+            #       info: Back up any flags before running basic flagging
+            #       params:
+            #             versionname: pre_targetflags
+                 
+            # flag2-autocorr: 
+            #       _use: lib.steps.flagdata.flag-manual.target
+            #       info: Flag auto correlations. 
+            #       params: 
+            #             autocorr: true
+                 
+            # flag2-shadow:
+            #       _use: lib.steps.flagdata.flag-shadow.target
+            #       info: Flag shadowed antenna
+            #       params:
+            #             tolerance: '{root.casa_flagdata_tolerance}'
+                 
+            # flag2-elevation:
+            #       _use: lib.steps.flagdata.flag-elevation.target
+            #       info: Flag antenna with pointing elevation outside the selected range
+            #       params:
+            #             lowerlimit: '{root.casa_flagdata_lowerlimit}'  
+                        
+            # flag2-inspect1:
+            #       _use: lib.steps.flagdata.inspect-flags.amptime.target
+            #       info: Inspect amp-time plot for quack flagging
+            #       params: 
+            #             coloraxis: 'scan' 
+                  
+            # flag2-quack1:
+            #       _use: lib.steps.flagdata.flag-quack.target
+            #       info:  Flag data at the start of the scans.
+            #       params: 
+            #             quackmode: 'beg'
+                   
+            # flag2-quack2:
+            #       _use: lib.steps.flagdata.flag-quack.target
+            #       info: Flag data at the end of the scans. 
+            #       params: 
+            #             quackmode: 'endb'
+                 
+            # flag2-zeros:
+            #       _use: lib.steps.flagdata.flag-clip.data.zeros.target
+            #       info: Flag zero values data. 
+            #       params: 
+            #             clipzeros: true
+                 
+            # flag2-edges:
+            #       _use: lib.steps.flagdata.flag-manual.target
+            #       info: Flag Bandpass edges and galactic plane
+            #       params: 
+            #             spw:   '{root.casa_flagdata_bpassedges}' 
+                 
+            # flag2-summary1:
+            #       _use: lib.steps.flagdata.flag-summary.target
+            #       info: Generate a summary of flagged data after basic flagging
+            #       params: 
+            #             field:   '{root.target-field}'
+                 
+            # save2-basicflags:
+            #       _use: lib.steps.flagdata.save-flags.target
+            #       info: Back up any flags before running RFI masker
+            #       params:
+            #             versionname: basic_flags
+                 
+            flag2-maskRFI:
+                  _use: lib.steps.flagdata.flag-manual.target
+                  info: Mask known RFI regions (GSM and aviation,GPS,Galilleo,Irridium,Inmarsat,Afristar etc)
+                  params:
+                        spw: '{root.casa_flagdata_mask}'
+                        uvrange: '{root.casa_flagdata_uvrange}'
+                 
+            flag2-summary2:
+                  _use: lib.steps.flagdata.flag-summary.target
+                  info: Generate a summary of flagged data after RFI masking
+                  params: 
+                        field:   '{root.target-field}' 
+                  
+            save2-maskRFI:
+                  _use: lib.steps.flagdata.save-flags.target
+                  info: Back up any flags before running autoflagdata
+                  params:
+                        versionname: maskRFI_flags
+                 
+            flag2-auto:
+                  _use: lib.steps.flagdata.flag-tricolour.target
+                  info: Auto flag data using tricolour
+                  params:
+                        window-backend: zarr-disk
+                 
+            flag2-summary3:
+                  _use: lib.steps.flagdata.flag-summary.target
+                  info: Generate a summary of flagged data after auto flagging
+                  params: 
+                        field:   '{root.target-field}'
+                 
+            save2-autoflags:
+                  _use: lib.steps.flagdata.save-flags.target
+                  info: Back up any flags after running autoflagdata
+                  params:
+                        versionname: auto_flags 
+                        
+            inspect2-flags2:
+                  _use: lib.steps.flagdata.inspect-flags.ampfreq.target
+                  info: Inspect ampfreq plots for RFI spikes
+                  params:
+                        suffix: 'ampfreq-target1'    
+                        
+            flag2-spw: 
+                  _use: lib.steps.flagdata.flag-manual.target
+                  info: 'manually flag bad spectral window'
+                  params: 
+                        spw: '{root.casa_flagdata_spw}' 
+                  skip: true 
+
+            flag-antenna: 
+                  _use: lib.steps.flagdata.flag-manual.target
+                  info: 'manually flag bad antenna'
+                  params: 
+                        antenna: '{root.casa_flagdata_antenna}'
+                  skip: true
+                  
+            save-manualflags:
+                  _use: lib.steps.flagdata.save-flags.target
+                  info: Back up any flags after manually flagging data
+                  params:
+                        versionname: manual_flags
+                  skip: true       
+                  
+            flag2-summary4:
+                  _use: lib.steps.flagdata.flag-summary.target
+                  info: Generate a summary of flagged data after manually flagging other bad data
+                  params: 
+                        field:   '{root.target-field}'
+                        
+            inspect2-flags3:
+                  _use: lib.steps.flagdata.inspect-flags.ampfreq.target
+                  info: Inspect ampfreq plots for RFI spikes
+                  params:
+                        suffix: 'ampfreq-target2'  
+                 
+            flag2-stats:
+                  _use: lib.steps.flagdata.flag-stats.target
+                  info: Summary of flagged data using Rfinder
+                  params: 
+                        field: '0'
+                        label: 'target'
+                  skip: true 
+                 
+            save2-postflags:
+                  _use: lib.steps.flagdata.save-flags.target
+                  info: Back up original flags after flagdata. 
+                  params:
+                        versionname: post_targetflags
+            
+            

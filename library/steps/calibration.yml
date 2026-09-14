@@ -1,0 +1,316 @@
+lib:
+   steps:
+      calibration: 
+         primary:
+         
+            model: 
+            
+               crystalball:
+                  cab: crystalball
+                  params:
+                     _use: lib.params.imaging.crystalball
+                     field: '{recipe.bpcal-field}'
+                     ms: '{recipe.msdir}/calibrators.ms'
+                     sky-model: '{recipe.crystallball_sky-model}'        
+                     
+            prim-K0:
+               cab: casa.gaincal    
+               params:
+                  field: '{recipe.bpcal-field}'
+                  caltable: '{recipe.caldir}/prim.K0'
+                  _use: lib.params.calibration.gaincal.delay 
+                  
+            prim-Gp0:
+               cab: casa.gaincal    
+               params:
+                  interp: [linear]
+                  field: '{recipe.bpcal-field}'
+                  gainfield: ['{recipe.bpcal-field}']
+                  caltable: '{recipe.caldir}/prim.Gp0' 
+                  gaintable: =LIST('{recipe.caldir}/prim.K0')
+                  _use: lib.params.calibration.gaincal.phase
+                      
+            prim-Ga0:
+               cab: casa.gaincal    
+               params:
+                  _use: lib.params.calibration.gaincal.amplitude
+                  interp: [linear,linear]
+                  field: '{recipe.bpcal-field}'
+                  caltable: '{recipe.caldir}/prim.Ga0'
+                  gainfield: ['{recipe.bpcal-field}','{recipe.bpcal-field}'] 
+                  gaintable: =LIST('{recipe.caldir}/prim.K0','{recipe.caldir}/prim.Gp0') 
+                        
+            prim-B0:
+               cab: casa.bandpass  
+               params:
+                  _use: lib.params.calibration.bandpass 
+                  solnorm: false
+                  interp: [linear,linear,linear]
+                  caltable: '{recipe.caldir}/prim.B0'
+                  gainfield: ['{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}'] 
+                  gaintable: =LIST('{recipe.caldir}/prim.K0','{recipe.caldir}/prim.Gp0','{recipe.caldir}/prim.Ga0') 
+                  
+            prim-Df0:
+               cab: casa.polcal  
+               params:
+                  _use: lib.params.calibration.polcal.leakages 
+                  caltable: '{recipe.caldir}/prim.Df0' 
+                  interp: [linear,linear,linear,linear]
+                  gainfield: ['{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}'] 
+                  gaintable: =LIST('{recipe.caldir}/prim.K0','{recipe.caldir}/prim.Gp0','{recipe.caldir}/prim.Ga0','{recipe.caldir}/prim.B0') 
+                  
+            prim-K1:
+               cab: casa.gaincal    
+               params:
+                  _use: lib.params.calibration.gaincal.delay
+                  field: '{recipe.bpcal-field}'
+                  caltable: '{recipe.caldir}/prim.K1'
+                  interp: [linear,linear,linear,nearest]
+                  gainfield: ['{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}']
+                  gaintable: =LIST('{recipe.caldir}/prim.Gp0','{recipe.caldir}/prim.Ga0','{recipe.caldir}/prim.B0','{recipe.caldir}/prim.Df0') 
+                  
+            prim-Gp1:
+               cab: casa.gaincal    
+               params: 
+                  _use: lib.params.calibration.gaincal.phase 
+                  field: '{recipe.bpcal-field}'  
+                  caltable: '{recipe.caldir}/prim.Gp1'
+                  interp: [linear,linear,linear,nearest]
+                  gainfield: ['{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}']
+                  gaintable: =LIST('{recipe.caldir}/prim.K1','{recipe.caldir}/prim.Ga0','{recipe.caldir}/prim.B0','{recipe.caldir}/prim.Df0')
+             
+            prim-Ga1:
+               cab: casa.gaincal    
+               params: 
+                  _use: lib.params.calibration.gaincal.amplitude 
+                  field: '{recipe.bpcal-field}' 
+                  caltable: '{recipe.caldir}/prim.Ga1'
+                  interp: [linear,linear,linear,nearest]
+                  gainfield: ['{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}']
+                  gaintable: =LIST('{recipe.caldir}/prim.K1','{recipe.caldir}/prim.Gp1','{recipe.caldir}/prim.B0','{recipe.caldir}/prim.Df0') 
+                  
+            prim-B1:
+               cab: casa.bandpass  
+               params:
+                  _use: lib.params.calibration.bandpass 
+                  caltable: '{recipe.caldir}/prim.B1'
+                  interp: [linear,linear,linear,nearest]
+                  gainfield: ['{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}']
+                  gaintable: =LIST('{recipe.caldir}/prim.K1','{recipe.caldir}/prim.Gp1','{recipe.caldir}/prim.Ga1','{recipe.caldir}/prim.Df0')
+                  
+            prim-Df1:
+               cab: casa.polcal  
+               params:
+                  _use: lib.params.calibration.polcal.leakages     
+                  caltable: '{recipe.caldir}/prim.Df1'
+                  interp: [linear,linear,linear,linear] 
+                  gainfield: ['{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}'] 
+                  gaintable: =LIST('{recipe.caldir}/prim.K1','{recipe.caldir}/prim.Gp1','{recipe.caldir}/prim.Ga1','{recipe.caldir}/prim.B1')
+                  
+            prim-K2:
+               cab: casa.gaincal    
+               params:
+                  _use: lib.params.calibration.gaincal.delay
+                  field: '{recipe.bpcal-field}'
+                  caltable: '{recipe.caldir}/prim.K2'
+                  interp: [linear,linear,linear,nearest]
+                  gainfield: ['{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}']
+                  gaintable: =LIST('{recipe.caldir}/prim.Gp1','{recipe.caldir}/prim.Ga1','{recipe.caldir}/prim.B1','{recipe.caldir}/prim.Df1')    
+                                 
+         secondary:
+         
+            model:
+               cab: casa.setjy
+               params:
+                  reffreq: '1000MHz'
+                  field: '{recipe.gcal-field}'
+                  ms: '{recipe.msdir}/calibrators.ms'
+                     
+            sec-Gp0:
+               cab: casa.gaincal    
+               params:
+                  _use: lib.params.calibration.gaincal.phase
+                  field: '{recipe.gcal-field}'
+                  interp: [nearest,linear,nearest] 
+                  caltable: '{recipe.caldir}/sec.Gp0'
+                  gainfield: ['{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}'] 
+                  gaintable: =LIST('{recipe.caldir}/prim.K2','{recipe.caldir}/prim.B1','{recipe.caldir}/prim.Df1') 
+                  
+            sec-Ga0:
+               cab: casa.gaincal    
+               params:
+                  _use: lib.params.calibration.gaincal.amplitude
+                  field: '{recipe.gcal-field}'
+                  caltable: '{recipe.caldir}/sec.Ga0'
+                  interp: [nearest,linear,linear,nearest] 
+                  gainfield: ['{recipe.bpcal-field}','{recipe.gcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}'] 
+                  gaintable: =LIST('{recipe.caldir}/prim.K2','{recipe.caldir}/sec.Gp0','{recipe.caldir}/prim.B1','{recipe.caldir}/prim.Df1')
+                  
+            sec-Gp1:
+               cab: casa.gaincal    
+               params:
+                  _use: lib.params.calibration.gaincal.phase
+                  field: '{recipe.gcal-field}'
+                  interp: [nearest,linear,nearest]
+                  caltable: '{recipe.caldir}/sec.Gp1' 
+                  gainfield: ['{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}']
+                  gaintable: =LIST('{recipe.caldir}/prim.K2','{recipe.caldir}/prim.B1','{recipe.caldir}/prim.Df1')
+                     
+            sec-Ga1:
+               cab: casa.gaincal    
+               params:
+                  _use: lib.params.calibration.gaincal.amplitude
+                  append: true
+                  field: '{recipe.gcal-field}'
+                  caltable: '{recipe.caldir}/prim.Ga1' 
+                  interp: [nearest,linear,linear,nearest]
+                  gainfield: ['{recipe.bpcal-field}','{recipe.gcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}']
+                  gaintable: =LIST('{recipe.caldir}/prim.K2','{recipe.caldir}/sec.Gp1','{recipe.caldir}/prim.B1','{recipe.caldir}/prim.Df1')
+                      
+            sec-F0:
+               cab: casa.fluxscale
+               params:
+                  reference: '{recipe.fcal-field}' 
+                  caltable: '{recipe.caldir}/prim.Ga1'
+                  fluxtable: '{recipe.caldir}/sec.F0' 
+                  _use: lib.params.calibration.fluxscale
+                         
+         polarization:
+    
+            model:
+               cab: casa.setjy
+               params:
+                  field: '{recipe.xcal-field}'
+                  ms: '{recipe.msdir}/calibrators.ms'
+                  
+            pol-Gp0:
+               cab: casa.gaincal    
+               params:
+                  _use: lib.params.calibration.polcal.phase
+                  caltable: '{recipe.caldir}/pol.Gp0'
+                  interp: [linear,linear,linear,nearest,nearest]
+                  gainfield: [nearest,nearest,nearest,nearest,'']  
+                  gaintable: =LIST('{recipe.caldir}/prim.B1','{recipe.caldir}/sec.Gp1','{recipe.caldir}/sec.F0','{recipe.caldir}/prim.K2','{recipe.caldir}/prim.Df1') 
+                         
+            pol-KCROSS:
+               cab: casa.gaincal    
+               params:
+                  _use: lib.params.calibration.polcal.xdelay
+                  caltable: '{recipe.caldir}/pol.KCROSS'
+                  interp: [linear,linear,linear,nearest,nearest,linear]
+                  gainfield: [nearest,nearest,nearest,nearest,'',''] 
+                  gaintable: =LIST('{recipe.caldir}/prim.B1','{recipe.caldir}/sec.Gp1','{recipe.caldir}/sec.F0','{recipe.caldir}/prim.K2','{recipe.caldir}/prim.Df1','{recipe.caldir}/pol.Gp0') 
+                          
+            pol-Xf:
+               cab: casa.polcal  
+               params:
+                  _use: lib.params.calibration.polcal.xphase
+                  spw: '{recipe.cal_spw}'
+                  caltable: '{recipe.caldir}/pol.Xf' 
+                  gainfield: [nearest,nearest,nearest,nearest,'','',''] 
+                  interp: [linear,linear,linear,nearest,nearest,linear,nearest]
+                  gaintable: =LIST('{recipe.caldir}/prim.B1','{recipe.caldir}/sec.Gp1','{recipe.caldir}/sec.F0','{recipe.caldir}/prim.K2','{recipe.caldir}/prim.Df1','{recipe.caldir}/pol.Gp0','{recipe.caldir}/pol.KCROSS') 
+                  
+            pol-Xf1:
+               cab: casa.polcal  
+               params:
+                  _use: lib.params.calibration.polcal.xphase
+                  spw: ''
+                  caltable: '{recipe.caldir}/pol.Xf1' 
+                  gainfield: [nearest,nearest,nearest,nearest,'','','',''] 
+                  interp: [linear,linear,linear,nearest,nearest,linear,nearest,nearest]
+                  gaintable: =LIST('{recipe.caldir}/prim.B1','{recipe.caldir}/sec.Gp1','{recipe.caldir}/sec.F0','{recipe.caldir}/prim.K2','{recipe.caldir}/prim.Df1','{recipe.caldir}/pol.Gp0','{recipe.caldir}/pol.KCROSS','{recipe.caldir}/pol.Xf') 
+                     
+         applycal:
+         
+            applyprim0:
+               cab: casa.applycal
+               params: 
+                  calwt: [false]
+                  _use: lib.params.calibration.applycal.prim
+                  interp: [linear,linear,linear,linear,nearest] 
+                  gainfield: ['{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}']     
+                  gaintable: =LIST('{recipe.caldir}/prim.K0','{recipe.caldir}/prim.Gp0','{recipe.caldir}/prim.Ga0','{recipe.caldir}/prim.B0','{recipe.caldir}/prim.Df0')
+            
+            applyprim1:
+               cab: casa.applycal
+               params: 
+                  calwt: [false]
+                  _use: lib.params.calibration.applycal.prim
+                  interp: [linear,linear,linear,linear,nearest] 
+                  gainfield: [nearest,nearest,nearest,nearest,nearest]  
+                  gaintable: =LIST('{recipe.caldir}/prim.K2','{recipe.caldir}/prim.Gp1','{recipe.caldir}/prim.Ga1','{recipe.caldir}/prim.B1','{recipe.caldir}/prim.Df1') 
+              
+            applysec0:
+               cab: casa.applycal
+               params: 
+                  calwt: [false]
+                  _use: lib.params.calibration.applycal.sec
+                  interp: [linear,linear,linear,linear,nearest]  
+                  gainfield: ['{recipe.bpcal-field}','{recipe.gcal-field}','{recipe.gcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}']   
+                  gaintable: =LIST('{recipe.caldir}/prim.K2','{recipe.caldir}/sec.Gp0','{recipe.caldir}/sec.Ga0','{recipe.caldir}/prim.B1','{recipe.caldir}/prim.Df1')    
+                       
+            applysec1:
+               cab: casa.applycal
+               params: 
+                  calwt: [false]
+                  _use: lib.params.calibration.applycal.sec
+                  interp: [linear,linear,linear,linear,nearest]  
+                  gainfield: ['{recipe.bpcal-field}','{recipe.gcal-field}','{recipe.gcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}']  
+                  gaintable: =LIST('{recipe.caldir}/prim.B1','{recipe.caldir}/sec.Gp1','{recipe.caldir}/sec.F0','{recipe.caldir}/prim.K2','{recipe.caldir}/prim.Df1')
+               
+            apply2pol:
+               cab: casa.applycal
+               params: 
+                  calwt: [false]
+                  _use: lib.params.calibration.applycal.pol
+                  interp: [linear,linear,linear,linear,nearest]
+                  gainfield: [nearest,nearest,nearest,nearest,nearest]  
+                  gaintable: =LIST('{recipe.caldir}/prim.B1','{recipe.caldir}/sec.Gp1','{recipe.caldir}/sec.F0','{recipe.caldir}/prim.K2','{recipe.caldir}/prim.Df1')  
+            
+            applycal2prim:
+               cab: casa.applycal
+               params: 
+                  _use: lib.params.calibration.applycal.prim 
+                  calwt: [false,false,false,false,false,false,false,false] 
+                  interp: [linear,linear,linear,linear,nearest,nearest,nearest,nearest] 
+                  gainfield:  ['{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}','{recipe.bpcal-field}','','','']   
+                  gaintable: =LIST('{recipe.caldir}/prim.B1','{recipe.caldir}/prim.K2','{recipe.caldir}/prim.Gp1','{recipe.caldir}/prim.Ga1','{recipe.caldir}/prim.Df1','{recipe.caldir}/pol.KCROSS','{recipe.caldir}/pol.Xf','{recipe.caldir}/pol.Xf1')
+                  
+            applycal2sec:
+               cab: casa.applycal
+               params: 
+                  _use: lib.params.calibration.applycal.sec 
+                  calwt: [false,false,false,false,false,false,false,false]
+                  gainfield:  [nearest,nearest,'',nearest,nearest,'','',''] 
+                  interp: [linear,nearest,nearest,linear,linear,nearest,nearest,nearest] 
+                  gaintable: =LIST('{recipe.caldir}/prim.B1','{recipe.caldir}/prim.K2','{recipe.caldir}/prim.Df1','{recipe.caldir}/sec.Gp1','{recipe.caldir}/sec.F0','{recipe.caldir}/pol.KCROSS','{recipe.caldir}/pol.Xf','{recipe.caldir}/pol.Xf1')  
+                     
+            applycal2pol:
+               cab: casa.applycal
+               params: 
+                  _use: lib.params.calibration.applycal.pol
+                  calwt: [false,false,false,false,false,true,false,false,false] 
+                  interp: [linear,nearest,nearest,linear'linear,linear,nearest,nearest]   
+                  gainfield: [nearest,nearest,'',nearest,nearest,'{recipe.xcal-field}','','','']   
+                  gaintable: =LIST('{recipe.caldir}/prim.B1','{recipe.caldir}/prim.K2','{recipe.caldir}/prim.Df1','{recipe.caldir}/sec.Gp1','{recipe.caldir}/sec.F0','{recipe.caldir}/pol.Gp0','{recipe.caldir}/pol.KCROSS','{recipe.caldir}/pol.Xf','{recipe.caldir}/pol.Xf1') 
+                           
+            applycal2target:
+               cab: casa.applycal
+               params: 
+                  _use: lib.params.calibration.applycal.target
+                  calwt: [false,false,false,false,false,false,false,false]   
+                  gainfield: [nearest,nearest,'',nearest,'nearest','','','']   
+                  interp: [linear,linear,nearest,linear,linear,nearest,nearest] 
+                  gaintable: =LIST('{recipe.caldir}/prim.B1','{recipe.caldir}/prim.K2','{recipe.caldir}/prim.Df1','{recipe.caldir}/sec.Gp1','{recipe.caldir}/sec.F0','{recipe.caldir}/pol.KCROSS','{recipe.caldir}/pol.Xf','{recipe.caldir}/pol.Xf1') 
+                  
+            
+                  
+            
+                  
+                 
+    
+   
+  
+  
+  

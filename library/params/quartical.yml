@@ -1,0 +1,187 @@
+lib:
+   params:
+      quartical:
+         
+         base:
+    
+            input_ms.is_bda: false
+            input_ms.time_chunk: 0
+            input_ms.freq_chunk: 0
+            input_ms.data_column: DATA
+            input_ms.select_ddids: [0]
+            input_ms.select_corr: [0,1,2,3]
+            input_ms.select_uv_range: [150,0]
+            input_model.source_chunks: 500
+            
+            solver.robust: false
+            solver.propagate_flags: true
+            solver.reference_antenna: '{recipe.quartical_refant}'
+            
+            output.flags: false
+            output.overwrite: true 
+            output.log_to_terminal: true
+            #output.log_directory: '{recipe.qcaldir/logs.qc}'
+            
+            dask.workers: 1
+            dask.scheduler: threads
+            dask.scheduler_plugin: true
+            
+            output.subtract_directions: [0]
+            output.columns: [CORRECTED_DATA]  
+            output.products: [corrected_data]
+            
+            
+            mad_flags.threshold_bl: 6
+            mad_flags.max_deviation: 1000
+            mad_flags.whitening: disabled
+            mad_flags.threshold_global: 8
+            mad_flags.enable: '{recipe.quartical_mad_flags}' 
+            
+         1gc:
+            prim:
+               _use:  lib.params.quartical.base
+               G.type: diag_complex 
+               G.time_interval: 0
+               G.freq_interval: 0
+               G.direction_dependent: false
+               K.type: delay
+               K.time_interval: 0
+               K.freq_interval: 0
+               K.initial_estimate: true
+               K.direction_dependent: false
+               B.type: diag_complex
+               B.time_interval: 1
+               B.freq_interval: 0 
+               B.direction_dependent: false
+               B.respect_scan_boundaries: false
+               D.type: complex
+               D.time_interval: 1
+               D.freq_interval: 0 
+               D.initial_estimate: false
+               D.direction_dependent: false
+               
+            sec:
+               _use:  lib.params.quartical.base
+               G.type: diag_complex  
+               G.time_interval: 1
+               G.freq_interval: 0
+               G.load_from: '{recipe.qcaldir}/GKBD.qc/Ga'
+               F.type: delay_and_offset
+               F.time_interval: 0
+               F.freq_interval: 0
+               K.type: delay
+               K.time_interval: 1
+               K.freq_interval: 0
+               K.initial_estimate: false
+               K.load_from: '{recipe.qcaldir}/GKBD.qc/K'
+               B.type: diag_complex
+               B.time_interval: 0
+               B.freq_interval: 1
+               B.load_from: '{recipe.qcaldir}/GKBD.qc/B'
+               D.type: complex
+               D.load_from: '{recipe.qcaldir}/GKBD.qc/D'
+               D.time_interval: 0
+               D.freq_interval: 1
+               D.respect_scan_boundaries: false
+               
+            pol:
+               _use:  lib.params.quartical.base
+               G.type: diag_complex  
+               G.time_interval: 1
+               G.freq_interval: 0
+               G.load_from: '{recipe.qcaldir}/GFKBD.qc/G'
+               F.type: delay_and_offset
+               F.time_interval: 0
+               F.freq_interval: 0
+               F.load_from: '{recipe.qcaldir}/GFKBD.qc/F'
+               K.type: delay
+               K.time_interval: 1
+               K.freq_interval: 0
+               K.initial_estimate: false
+               K.load_from: '{recipe.qcaldir}/GFKBD.qc/K'
+               B.type: diag_complex
+               B.time_interval: 0
+               B.freq_interval: 1
+               B.load_from: '{recipe.qcaldir}/GFKBD.qc/B'
+               X.type: crosshand_phase_null_v
+               X.solve_per: array
+               X.time_interval: 0
+               X.freq_interval: 1
+               X.respect_scan_boundaries: false
+               D.type: complex
+               D.load_from: '{recipe.qcaldir}/GFKBD.qc/D'
+               D.time_interval: 0
+               D.freq_interval: 1
+               D.respect_scan_boundaries: false
+               
+            target:
+               _use:  lib.params.quartical.base
+               G.type: diag_complex  
+               G.time_interval: 1
+               G.freq_interval: 0
+               G.load_from: '{recipe.qcaldir}/GFKBXD.qc/G'
+               F.type: delay_and_offset
+               F.time_interval: 0
+               F.freq_interval: 0
+               F.load_from: '{recipe.qcaldir}/GFKBXD.qc/F'
+               K.type: delay
+               K.time_interval: 1
+               K.freq_interval: 0
+               K.initial_estimate: false
+               K.load_from: '{recipe.qcaldir}/GFKBXD.qc/K'
+               B.type: diag_complex
+               B.time_interval: 0
+               B.freq_interval: 1
+               B.load_from: '{recipe.qcaldir}/GFKBXD.qc/B'
+               X.type: crosshand_phase_null_v
+               X.solve_per: array
+               X.time_interval: 0
+               X.freq_interval: 1
+               X.respect_scan_boundaries: false
+               X.load_from: '{recipe.qcaldir}/GFKBXD.qc/X'
+               D.type: complex
+               D.load_from: '{recipe.qcaldir}/GFKBXD.qc/D'
+               D.time_interval: 0
+               D.freq_interval: 1
+               D.respect_scan_boundaries: false
+               
+         selfcal: 
+            
+            K: 
+               _use:  lib.params.quartical.base
+               K.time_interval: 1
+               K.freq_interval: 0
+               K.type: delay_and_offset
+               K.initial_estimate: false
+               #K.load_from: '{recipe.selfcaldir}/gains_DI.qc/K'
+               
+          
+            K-dE:
+               _use:  lib.params.quartical.selfcal.K
+               dE.type: diag_complex
+               dE.solve_per: antenna
+               dE.time_interval: 16
+               dE.freq_interval: 128
+               dE.interp_mode: reim
+               dE.interp_method: 2dlinear
+               dE.pinned_directions: [0]
+               dE.initial_estimate: false
+               dE.direction_dependent: true
+               dE.respect_scan_boundaries: true
+               #dE.load_from: '{recipe.selfcaldir}/gains_DD.qc/dE'
+              
+            
+            
+            
+            
+           
+                 
+    
+    
+    
+  
+   
+    
+   
+   
+

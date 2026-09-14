@@ -1,0 +1,128 @@
+lib:
+   steps:
+      1gc:
+         primary:
+            cab: quartical
+            params:
+               _use:  lib.params.quartical.1gc.prim
+               input_ms.select_fields: [1]
+               input_ms.path: '{recipe.msdir}/calibrators.ms'
+               input_model.recipe: MODEL_DATA
+               #input_ms.sigma_column: SIGMA_SPECTRUM
+               input_ms.weight_column: WEIGHT_SPECTRUM
+               input_model.apply_p_jones: false
+               output.apply_p_jones_inv: false
+               output.gain_directory: '{recipe.qcaldir}/GKBD.qc'
+               input_ms.group_by: [SCAN_NUMBER,FIELD_ID,DATA_DESC_ID]
+               
+               
+               dask.threads: 2
+               solver.threads: 8
+               
+         secondary:
+            cab: quartical
+            params:
+               _use:  lib.params.quartical.1gc.sec
+               input_ms.select_fields: [2]
+               input_ms.path: '{recipe.msdir}/calibrators.ms'
+               input_model.recipe: 
+               input_model.apply_p_jones: true
+               output.net_gains: [G,K,B,D]
+               output.apply_p_jones_inv: true
+               output.gain_directory: '{recipe.qcaldir}/GFKBD.qc'
+               input_ms.group_by: [SCAN_NUMBER,FIELD_ID,DATA_DESC_ID]
+               
+               dask.threads: 4
+               solver.threads: 8
+               
+         polarization:
+            cab: quartical
+            params:
+               _use:  lib.params.quartical.1gc.pol
+               input_ms.select_fields: [3]
+               input_ms.path: '{recipe.msdir}/calibrators.ms'
+               input_ms.group_by: [FIELD_ID,DATA_DESC_ID] 
+               input_model.recipe: 
+               input_model.apply_p_jones: true
+               output.apply_p_jones_inv: true
+               output.gain_directory: '{recipe.qcaldir}/GFKBXD.qc'
+               
+               dask.threads: 4
+               solver.threads: 8
+               
+         target:
+            cab: quartical
+            params:
+               _use:  lib.params.quartical.1gc.target
+               input_ms.select_fields: [0]
+               input_ms.path: '{recipe.msdir}/target.ms'
+               input_ms.group_by: [SCAN_NUMBER,FIELD_ID,DATA_DESC_ID]
+               input_model.recipe: 
+               input_model.apply_p_jones: true
+               output.apply_p_jones_inv: true
+               output.gain_directory: '{recipe.qcaldir}/applycal.qc'
+               
+               dask.threads: 32
+               solver.threads: 2
+      selfcal:
+      
+         direction-independent:
+            cab: quartical
+            params:
+               _use:  lib.params.quartical.selfcal.K
+               
+               input_ms.time_chunk: 25
+               input_ms.freq_chunk: 0
+               input_ms.path: '{recipe.msdir}/target.ms'
+               input_model.recipe: MODEL_DATA
+               input_model.apply_p_jones: false
+               output.net_gains: [K]
+               output.subtract_directions: [0]
+               output.apply_p_jones_inv: false
+               output.columns: [CORRECTED_DATA]  
+               output.products: [corrected_data]
+               output.gain_directory: '{recipe.selfcaldir}/gains_DI.qc'
+               
+               solver.threads: 2
+               solver.robust: true
+               solver.propagate_flags: true
+               
+               dask.threads: 32
+            
+         direction-dependent:
+            cab: quartical
+            params:
+               _use:  lib.params.quartical.selfcal.K-dE
+               
+               input_ms.time_chunk: 25
+               input_ms.freq_chunk: 0
+               input_ms.path: '{recipe.msdir}/target.ms'
+               input_model.recipe: 'MODEL_DATA:MODEL_DATA1'
+               input_model.apply_p_jones: false
+               
+               output.subtract_directions: [1]
+               output.apply_p_jones_inv: false
+               output.products: [corrected_residual, corrected_weight]
+               output.columns: [CORRECTED_RESIDUAL, WEIGHT_SPECTRUM]
+               output.gain_directory: '{recipe.selfcaldir}/gains_DD.qc'
+               
+               solver.threads: 2
+               solver.robust: true
+               solver.propagate_flags: true
+               
+               dask.threads: 32
+               
+              
+               
+               
+               
+              
+               
+               
+              
+     
+     
+             
+   
+   
+
