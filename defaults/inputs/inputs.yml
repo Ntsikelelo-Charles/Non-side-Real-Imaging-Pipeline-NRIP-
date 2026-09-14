@@ -1,0 +1,179 @@
+  obs:
+     info: Select parameters by label. these parameters are based on (obs.yml). 
+     required: true
+     choices: [default,config]
+     
+  band: 
+     info: Observation band
+     required: true
+     choices: [L,S0,S1,S2,S3,S4,UHF]
+     
+  breizorro_threshold: 
+     dtype: float
+     required: true
+     
+  breizorro_boxsize:
+     dtype: int
+     required: true
+     
+  breizorro_dilate:
+     dtype: int
+     required: true
+    
+  cal_refant: 
+     dtype: str
+     required: true
+     choices: [m000,m001,m002,m003,m004,m005,m006,m007]
+     
+  cal_uvrange:  
+     dtype: str
+     required: true
+     
+  cal_spw: 
+     required: true
+     dtype: str
+     
+  casa_flagdata_spw: 
+     dtype: str
+     required: false
+     
+  casa_flagdata_scan: 
+     dtype: str
+     required: false
+     
+  casa_flagdata_antenna: 
+     dtype: str
+     required: false
+     
+  casa_flagdata_quackinterval: 
+     dtype: float
+     required: false
+     
+  casa_bandpass_fillgaps:
+     required: true
+     dtype: int
+    
+  casa_mstransform_cals_scan: 
+     dtype: str
+     required: false
+     
+  casa_mstransform_target_scan:
+     dtype: str
+     required: false
+     
+  casa_flagdata_lowerlimit: 
+     dtype: float
+     required: true
+     
+  casa_flagdata_uvrange: 
+     dtype: str
+     required: true
+     
+  casa_flagdata_tolerance: 
+     dtype: float
+     required: true
+     
+  casa_flagdata_bpassedges: 
+     dtype: str
+     required: true
+     
+  casa_flagdata_mask: 
+     dtype: str
+     required: true
+     
+  crystallball_sky-model: 
+     required: true
+     dtype: File
+     
+  crystallball_num-sources: 
+     required: true
+     dtype: int
+     
+  crystallball_points-only: 
+     required: true
+     dtype: bool
+     
+  crystallball_memory-fraction: 
+     required: true
+     dtype: float
+
+   
+
+  ms_path: 
+     dtype: MS
+     required: true
+     
+  ms_data-ID: 
+     dtype: str
+     required: true
+     
+  bpcal-field: 
+     dtype: str
+     required: true
+     choices: [J0408-6545, 0408-65,J1939-6342]
+     
+  fcal-field:  
+     dtype: str
+     required: true
+     choices: [J0408-6545, 0408-65,J1939-6342]
+     
+  gcal-field: 
+     dtype: str
+     required: true
+     
+  xcal-field: 
+     dtype: str
+     required: true
+     choices: [J1331+3030,J0521+1638]
+     
+  target-field: 
+     dtype: str
+     required: true
+     
+  quartical_refant: 
+     dtype: int
+     required: true
+     
+  quartical_mad_flags:
+     dtype: bool
+     required: false 
+     choices: [000,001,002,003,004,005,006,007] 
+     
+  rfinder_rfi-mode: 
+     dtype: str
+     required: false
+     
+  tricolour_config-cals: 
+     required: true
+     dtype: File
+     
+  tricolour_config-target:
+     required: true
+     dtype: File
+  
+  wsclean_nchan: 
+     dtype: int
+     required: true
+     
+  wsclean_size: 
+     dtype: Union[int, Tuple[int, int]]
+     required: true
+     
+  wsclean_auto-threshold: 
+     dtype: float
+     required: true
+     
+  wsclean_weight: 
+     dtype: Union[str, Tuple[str, float]]
+     required: true
+     
+  wsclean_parallel-gridding: 
+     dtype: int
+     required: true
+     
+  wsclean_scale:
+     dtype: Union[str, float]
+     required: true
+  
+  
+  

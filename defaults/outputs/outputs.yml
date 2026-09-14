@@ -1,0 +1,109 @@
+  
+  indir:
+      dtype: Directory
+      info: Directory of input files
+      default: '{current.dirs.base}/{current.ms_data-ID}/input'
+      mkdir: true
+      
+  msdir:
+      dtype: Directory
+      info: Directory of split ms
+      default: '{current.dirs.base}/{current.ms_data-ID}/msdir'
+      mkdir: true
+      
+  logdir:
+     dtype: Directory
+     info: Directory of output logs 
+     default: '{current.dirs.base}/{current.ms_data-ID}/logs'
+     mkdir: true 
+      
+  outdir:
+      dtype: Directory
+      info: Directory of output products 
+      default: '{current.dirs.base}/{current.ms_data-ID}/output'
+      mkdir: true 
+      
+  imdir:
+     dtype: Directory
+     info: Directory of images
+     default: '{current.outdir}/images'
+     mkdir: true
+     
+  flagsdir:
+     dtype: Directory
+     info: Directory of flag statistics  
+     default: '{current.outdir}/flag-statistics'
+     mkdir: true
+     
+  caldir:
+     dtype: Directory
+     info: Directory of QuartiCal products
+     default: '{current.outdir}/cal'
+     mkdir: true
+        
+  selfcaldir:
+     dtype: Directory
+     info: Directory of selfcal products
+     default: '{current.caldir}/selfcal'
+     mkdir: true
+     
+  
+     
+  plotdir:
+     dtype: Directory
+     info: Directory of diagnostic plots  
+     default: '{current.outdir}/diagnostic-plots'
+     mkdir: true
+     
+  obsdir:
+     dtype: Directory
+     info: Directory of observation information 
+     default: '{current.outdir}/obsinfo'
+     mkdir: true
+     
+
+   
+  antdir:
+     dtype: Directory
+     info: Directory of diagnostic plots-antenna Plots
+     default: '{current.plotdir}/antenna-plots'
+     mkdir: true
+     
+  spectradir:
+     dtype: Directory
+     info: Directory of diagnostic plots-spectra  
+     default: '{current.plotdir}/spectra'
+     mkdir: true
+     
+  phaseballsdir:
+     dtype: Directory
+     info: Directory of diagnostic plots- phaseballs 
+     default: '{current.plotdir}/phaseballs'
+     mkdir: true
+     
+  normballsdir:
+     dtype: Directory
+     info: Directory of diagnostic plots-normalized phaseballs 
+     default: '{current.plotdir}/normballs'
+     mkdir: true
+     
+  calplotdir:
+     dtype: Directory
+     info: Directory of diagnostic plots-caltables 
+     default: '{current.plotdir}/caltables'
+     mkdir: true
+     
+  baselinedir:
+     dtype: Directory
+     info: Directory of diagnostic plots-frequency_baseline
+     default: '{current.plotdir}/baseline'
+     mkdir: true
+   
+  uvdistdir:
+     dtype: Directory
+     info: Directory of diagnostic plots-UVdistance 
+     default: '{current.plotdir}/uv-distance'
+     mkdir: true
+   
+     
+  
