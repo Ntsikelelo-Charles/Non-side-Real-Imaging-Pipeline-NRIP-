@@ -1,21 +1,21 @@
 
 obs:
       default:
-            ms_path: /net/com08/data6/oms/data/ATLAS/1762400802_sdp_l0.ms
-            ms_data-ID: '1762400802_sdp_l0'
+            ms_path: /data/ncharles/1680991558_sdp_l0.ms
+            ms_data-ID: '1680991558_sdp_l0'
 
             bpcal-field: 'J1939-6342'
             # fcal-field:  'J0408-6545' 
             fcal-field:  'J1939-6342' 
-            gcal-field: 'J1239-1023'
+            gcal-field: 'J1517-2422'
             xcal-field: 'J1331+3030'
-            target-field: 'Atlas'
+            target-field: 'HD142990'
             
             breizorro_dilate: 2
             breizorro_boxsize: 50
             breizorro_threshold: 6.5 
             
-            cal_refant: m004
+            cal_refant: m007
             quartical_refant: 005
             quartical_mad_flags: true  
             
@@ -41,7 +41,7 @@ obs:
             wsclean_weight: 'briggs 0.0'
             wsclean_parallel-gridding: 1
             
-            band: L              
+            band: UHF             
       
 band:
       L:
