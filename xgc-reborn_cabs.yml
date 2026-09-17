@@ -157,10 +157,14 @@ cabs:
 
       field_name = target_field_names[0]
       print(f"{type_field} name is {field_name}")
-      print("STIMELA_OUTPUT_TEST_START")
-      print(field_name)
-      print("STIMELA_OUTPUT_TEST_END")
-    
+      
+      print(f"{type_field} name is {field_name}")
+
+      # Write the field name to a text file
+      with open(output_file, "w") as f:
+          f.write(field_name + "\n")
+
+      print(f"Wrote field name to: {output_file}")
 
     inputs:
       ms:
@@ -169,12 +173,14 @@ cabs:
         policies:
           positional: true
         must_exist: true
+
       type_field:
-        dtype: str 
-        required: true    
-    outputs:
-      field_name:
-        dtype: str  
+        dtype: str
+        required: true
+
+      output_file:
+        dtype: File
+        required: true
 
 
   fix-ms-direction:
@@ -380,7 +386,7 @@ lib:
         cab: wsclean
         params:
           ms: ='{recipe.msdir}/target.ms'
-          prefix: ="{recipe.imdir}/image_{info.suffix}"
+          prefix: ="{recipe.imdir}/image_{info.suffix}/"
           column: CORRECTED{info.suffix}_DATA
           size: =recipe.wsclean_size
           scale: =recipe.wsclean_scale

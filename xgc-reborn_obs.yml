@@ -29,6 +29,7 @@ obs:
     wsclean_weight: briggs 0.0
     wsclean_parallel-gridding: 1
     band: L
+    crystallball_sky-model: data/crystallball/L-BAND/fitted.PKS1934.LBand.wsclean.cat.txt
 band:
   L:
     cal_uvrange: '>150m'
