@@ -96,7 +96,6 @@ cabs:
     backend:
         select: native
         native:
-          virtual_env: ~/.venv/xgcreborn_env
     inputs:
         ms_path: 
           dtype: Directory 
@@ -111,77 +110,7 @@ cabs:
          dtype: str
          policies:
             positional: true  
-  get-field-names:
-    flavour: python-code
-    command: |
-      from casacore.tables import table
-
-      # FIELD table
-      with table(ms + "/FIELD", readonly=True) as field:
-          field_names = field.getcol("NAME")
-
-      # STATE table
-      with table(ms + "/STATE", readonly=True) as state:
-          state_obs_mode = state.getcol("OBS_MODE")
-
-      # MAIN table
-      with table(ms, readonly=True) as main:
-          field_id = main.getcol("FIELD_ID")
-          state_id = main.getcol("STATE_ID")
-
-      # Find e.g., TARGET state IDs
-      target_state_ids = set()
-
-      for i, mode in enumerate(state_obs_mode):
-          if type_field in mode.upper():
-              target_state_ids.add(i)
-
-      # Find fields associated with e.g TARGETS states
-      target_field_ids = set()
-
-      for fid, sid in zip(field_id, state_id):
-          if sid in target_state_ids:
-              target_field_ids.add(fid)
-
-      target_field_names = [
-          field_names[fid] for fid in sorted(target_field_ids)
-      ]
-
-      if not target_field_names:
-          raise RuntimeError("No "+type_field+" field found.")
-
-      if type_field=="TARGET" and len(target_field_names) > 1:
-          raise RuntimeError(
-              f"Multiple TARGET fields found: {target_field_names}"
-          )
-
-      field_name = target_field_names[0]
-      print(f"{type_field} name is {field_name}")
-      
-      print(f"{type_field} name is {field_name}")
-
-      # Write the field name to a text file
-      with open(output_file, "w") as f:
-          f.write(field_name + "\n")
-
-      print(f"Wrote field name to: {output_file}")
-
-    inputs:
-      ms:
-        info: Path to the measurement set.
-        dtype: MS
-        policies:
-          positional: true
-        must_exist: true
-
-      type_field:
-        dtype: str
-        required: true
-
-      output_file:
-        dtype: File
-        required: true
-
+ 
 
   fix-ms-direction:
     info: gets direction of given solar system body for mid-point of MS
@@ -254,50 +183,7 @@ cabs:
         required: true
         nom_de_guerre: outputvis
 
-  weighted-mean-image:
-    info: 
-      computes the mean of a series of FITS images, using inverse variance weighting
-    inputs:
-      images: 
-        dtype: List[File]
-      residuals: 
-        dtype: List[File]
-      exclude_center:
-        info: exclude a box of this size at the image centre when computing variance
-        dtype: int
-        default: 1000
-    outputs:
-      output_image: 
-        dtype: File
-      output_residual: 
-        dtype: File
-    flavour: python-code
-    command: |
-        from astropy.io import fits
-        import numpy as np
-        from numpy.ma import masked_array
-        ffs = [fits.open(path) for path in images]
-        ims = [ff[0].data for ff in ffs]
-        rffs = [fits.open(path) for path in residuals]
-        rims = rims_masked = [ff[0].data for ff in rffs]
-        if exclude_center:
-          mask = np.zeros_like(ims[0], bool)
-          i0 = mask.shape[-1]//2 - exclude_center//2
-          i1 = mask.shape[-1]//2 + exclude_center//2
-          j0 = mask.shape[-2]//2 - exclude_center//2
-          j1 = mask.shape[-2]//2 + exclude_center//2
-          mask[..., j0:j1, i0:i1] = True
-          rims_masked = [masked_array(im, mask) for im in rims]
-        istds = [1/im.std() for im in rims_masked]
-        print(f"Inverse residual variances are {istds}")
-        mean = sum([im*istd for (im, istd) in zip(ims, istds)]) / sum(istds)
-        rmean = sum([im*istd for (im, istd) in zip(rims, istds)]) / sum(istds)
-        ffs[0][0].data = mean.data
-        ffs[0].writeto(output_image, overwrite=True) 
-        print(f"Wrote mean image to {output_image}")
-        ffs[0][0].data = rmean.data
-        ffs[0].writeto(output_residual, overwrite=True) 
-        print(f"Wrote mean residual to {output_residual}")
+
 
   save-ms-info:
     flavour: python-code
@@ -353,55 +239,27 @@ lib:
             fft-image: =STRIPEXT(current.image) + ".fft.fits"
             lambda-per-arcsec: 100
 
-  steps:
-    mean-cubes:
-      recipe:
-        name: mean_iquv
-        inputs:
-          prefix:
-            dtype: str
-        for_loop:
-          var: stokes
-          over: [I, Q, U, V]
-        steps:
-          mean-image:
-            cab: weighted-mean-image
-            params:
-              images: =GLOB("{recipe.prefix}-t????-MFS-{recipe.stokes}-image.fits")
-              residuals: =GLOB("{recipe.prefix}-t????-MFS-{recipe.stokes}-residual.fits")
-              output_image: "{recipe.prefix}-mean-MFS-{recipe.stokes}-image.fits"
-              output_residual: "{recipe.prefix}-mean-MFS-{recipe.stokes}-residual.fits"
-          fft-mean-residual:
-            cab: fft-image
-            params:
-              image: =previous.output_residual
-              fft-image: =STRIPEXT(previous.output_residual) + ".fft.fits"
-              lambda-per-arcsec: 100
-      params:
-        prefix: "{recipe.image-upsample-prefix}"
-        
+  steps:    
     wsclean:
       base:
         info: "base wsclean settings"
         cab: wsclean
         params:
           ms: ='{recipe.msdir}/target.ms'
-          prefix: ="{recipe.imdir}/image_{info.suffix}/"
+          prefix: ="{recipe.imdir}/image_{info.suffix}/image_{info.suffix}"
           column: CORRECTED{info.suffix}_DATA
           size: =recipe.wsclean_size
           scale: =recipe.wsclean_scale
           padding: 1.3
           wstack-nwlayers-factor: 3
           nchan: =recipe.wsclean_nchan
-          temp-dir: /data/ncharles/tmp
+          temp-dir: ='{recipe.msdir}/tmp'
           use-wgridder: true
           log-time: true
-         #  minuv-l: =IF(recipe.inner-taper.enable, recipe.inner-taper.cut, UNSET)
-         #  taper-inner-tukey: =IF(recipe.inner-taper.enable, recipe.inner-taper.taper, UNSET)
+          # minuv-l: =IF(recipe.inner-taper.enable, recipe.inner-taper.cut, UNSET)
+          # taper-inner-tukey: =IF(recipe.inner-taper.enable, recipe.inner-taper.taper, UNSET)
       
    
-         
-
       dirty:
         _use: lib.steps.wsclean.base
         info: "wsclean step for dirty-only image"
@@ -477,54 +335,4 @@ lib:
         params:
           pol: IQ
 
-   #  quartical:
-   #    k:
-   #      _use: lib.steps.quartical.base
-   #      params:
-   #        input_ms:
-   #          path: =recipe.ms
-   #          select_corr: [0,1,2,3]
-   #          select_uv_range: =LIST(400*0.33, 0)
-   #        input_model:
-   #          recipe: MODEL_DATA
-   #          apply_p_jones: =recipe.pa-rotate
-   #        solver:
-   #          terms: [K]
-   #          iter_recipe: [50]
-   #          propagate_flags: true
-   #          robust: false
-   #        output:
-   #          gain_directory: "{recipe.dir-out}/cal-{info.suffix}"
-   #          log_directory: "{recipe.dir-out}/cal-{info.suffix}"
-   #          overwrite: true
-   #          products: [corrected_data]
-   #          columns: =LIST("CORRECTED{info.suffix}_DATA")
-   #          flags: true
-   #          apply_p_jones_inv: =recipe.pa-rotate
-   #        mad_flags:
-   #          enable: =root.mad-flag 
-   #          threshold_bl: 6
-   #          threshold_global: 8
-   #          max_deviation: 1000
-   #        K:
-   #          time_interval: 1
-   #          freq_interval: 0
-   #          type: delay
-   #          initial_estimate: false
-
-   #    k-de:
-   #      _use: lib.steps.quartical.k
-   #      params:
-   #        input_model:
-   #          recipe: MODEL{info.suffix}_DATA~DIR1_DATA:DIR1_DATA
-   #        solver:
-   #          terms: [K,dE]
-   #          iter_recipe: [25,25,25,25,25]
-   #        output:
-   #          products: [corrected_residual]
-   #          subtract_directions: [1]
-   #        dE:
-   #          direction_dependent: true
-   #          time_interval: 16
-   #          freq_interval: 128
-   #          type: complex
+  

@@ -1,5 +1,3 @@
-
-
 from casacore.tables import table
 from pathlib import Path
 import argparse
@@ -42,7 +40,7 @@ def get_field_names(ms):
 
 
 def find_fields(field_modes, search_string):
-    """Find fields whose OBS_MODE contains search_string."""
+    """Find all fields whose OBS_MODE contains search_string."""
 
     search_string = search_string.upper()
 
@@ -79,18 +77,24 @@ def get_single_field(field_modes, search_string):
     return names[0]
 
 
+def get_multiple_fields(field_modes, search_string):
+    """Return all matching fields."""
+
+    names = find_fields(field_modes, search_string)
+
+    if not names:
+        raise RuntimeError(
+            f"No field found with OBS_MODE containing "
+            f"'{search_string}'"
+        )
+
+    return names
+
+
 def get_frequency_range(ms):
     """
     Get the minimum and maximum channel frequency from
     the SPECTRAL_WINDOW table.
-
-    Returns
-    -------
-    min_freq_hz : float
-        Minimum frequency in Hz.
-
-    max_freq_hz : float
-        Maximum frequency in Hz.
     """
 
     spw_table = ms + "/SPECTRAL_WINDOW"
@@ -230,10 +234,14 @@ def update_obs_file(ms):
         "CALIBRATE_FLUX"
     )
 
-    gcal = get_single_field(
+    # Get ALL phase calibrators
+    gcal_fields = get_multiple_fields(
         field_modes,
         "CALIBRATE_PHASE"
     )
+
+    # Store multiple phase calibrators as a comma-separated string
+    gcal = ", ".join(gcal_fields)
 
     target = get_single_field(
         field_modes,
@@ -263,7 +271,7 @@ def update_obs_file(ms):
     )
 
     # ---------------------------------------------------------
-    # Update ONLY the required fields
+    # Update required fields
     # ---------------------------------------------------------
 
     obs["bpcal-field"] = bpcal
@@ -334,4 +342,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

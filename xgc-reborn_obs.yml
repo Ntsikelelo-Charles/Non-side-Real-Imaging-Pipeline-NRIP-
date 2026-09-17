@@ -1,10 +1,10 @@
 obs:
   default:
     ms_path: /net/ziggy/data/oms/killick-cv/data/raw/1680991557_sdp_l0.ms
-    ms_data-ID: 1680991558_sdp_l0
+    ms_data-ID: OutputDir
     bpcal-field: J1939-6342
     fcal-field: J1939-6342
-    gcal-field: J1517-2422
+    gcal-field: J1517-2422, J1605-1734
     xcal-field: J1331+3030
     target-field: HD142990
     breizorro_dilate: 2
