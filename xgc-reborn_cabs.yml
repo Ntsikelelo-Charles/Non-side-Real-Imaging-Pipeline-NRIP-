@@ -111,7 +111,65 @@ cabs:
          dtype: str
          policies:
             positional: true  
-                 
+get_target_field:
+  inputs:
+    ms:
+      dtype: ms
+      required: true
+      nom_defer: true
+
+  outputs:
+    target:
+      dtype: str
+
+  flavour: python-code
+
+  command: |
+    from casacore.tables import table
+
+    # FIELD table
+    with table(ms + "/FIELD", readonly=True) as field:
+        field_names = field.getcol("NAME")
+
+    # STATE table
+    with table(ms + "/STATE", readonly=True) as state:
+        state_obs_mode = state.getcol("OBS_MODE")
+
+    # MAIN table
+    with table(ms, readonly=True) as main:
+        field_id = main.getcol("FIELD_ID")
+        state_id = main.getcol("STATE_ID")
+
+    # Find TARGET state IDs
+    target_state_ids = set()
+
+    for i, mode in enumerate(state_obs_mode):
+        if "TARGET" in mode.upper():
+            target_state_ids.add(i)
+
+    # Find fields associated with TARGET states
+    target_field_ids = set()
+
+    for fid, sid in zip(field_id, state_id):
+        if sid in target_state_ids:
+            target_field_ids.add(fid)
+
+    target_field_names = [
+        field_names[fid] for fid in sorted(target_field_ids)
+    ]
+
+    if not target_field_names:
+        raise RuntimeError("No TARGET field found.")
+
+    if len(target_field_names) > 1:
+        raise RuntimeError(
+            f"Multiple TARGET fields found: {target_field_names}"
+        )
+
+    target = target_field_names[0]
+
+  
+
   fix-ms-direction:
     info: gets direction of given solar system body for mid-point of MS
     inputs:
@@ -316,11 +374,11 @@ lib:
           ms: ='{recipe.msdir}/target.ms'
           prefix: ="{recipe.imdir}/image_{info.suffix}"
           column: CORRECTED{info.suffix}_DATA
-          size: recipe.wsclean_size
-          scale: recipe.wsclean_scale
+          size: =recipe.wsclean_size
+          scale: =recipe.wsclean_scale
           padding: 1.3
           wstack-nwlayers-factor: 3
-          nchan: 8
+          nchan: =recipe.wsclean_nchan
           temp-dir: /data/ncharles/tmp
           use-wgridder: true
           log-time: true
@@ -351,7 +409,7 @@ lib:
         params:
           column: CORRECTED_DATA
           mgain: 0.9
-          weight: 'briggs 0'
+          weight: =recipe.wsclean_weight
           fit-beam: true
           elliptical-beam: true
           parallel-deconvolution: 1500

@@ -1,7 +1,7 @@
 
 obs:
       default:
-            ms_path: /data/ncharles/1680991558_sdp_l0.ms
+            ms_path: /net/ziggy/data/oms/killick-cv/data/raw/1680991557_sdp_l0.ms 
             ms_data-ID: '1680991558_sdp_l0'
 
             bpcal-field: 'J1939-6342'
@@ -34,14 +34,14 @@ obs:
             crystallball_points-only: true
             crystallball_memory-fraction: 0.5
             
-            wsclean_nchan: 4
+            wsclean_nchan: 8
             wsclean_size: 8000
             wsclean_scale: 1.3 asec
             wsclean_auto-threshold: 2
             wsclean_weight: 'briggs 0.0'
             wsclean_parallel-gridding: 1
             
-            band: UHF             
+            band: L            
       
 band:
       L:
