@@ -9,6 +9,7 @@ import yaml
 OBS_FILE = "xgc-reborn_obs.yml"
 
 
+
 def get_field_names(ms):
     """Return field names grouped by OBS_MODE."""
 
@@ -47,9 +48,7 @@ def find_fields(field_modes, search_string):
     names = []
 
     for info in field_modes.values():
-
         if any(search_string in mode for mode in info["modes"]):
-
             if info["name"] not in names:
                 names.append(info["name"])
 
@@ -68,7 +67,6 @@ def get_single_field(field_modes, search_string):
         )
 
     if len(names) > 1:
-
         warnings.warn(
             f"Multiple fields found for '{search_string}': "
             f"{names}. Using {names[0]}"
@@ -150,39 +148,54 @@ def determine_band(ms):
     return band
 
 
-def determine_crystallball_sky_model(bpcal, fcal):
+def determine_crystallball_sky_model(bpcal, fcal, band):
     """
     Determine the Crystallball sky model from the
-    bandpass and flux calibrator names.
+    calibrator names and observing band.
     """
 
     bpcal = str(bpcal).strip().upper()
     fcal = str(fcal).strip().upper()
+    band = str(band).strip().upper()
 
     calibrators = {bpcal, fcal}
 
-    # PKS 1934-638
-    if "J1939-6342" in calibrators:
+    # UHF
+    if band == "UHF":
         return (
             "data/crystallball/"
-            "L-BAND/fitted.PKS1934.LBand.wsclean.cat.txt"
+            "UHF-BAND/fitted.PKS1934.UBand.wsclean.cat.txt"
         )
 
-    # PKS 0408-65
-    if calibrators.intersection({
-        "J0408-6545",
-        "0408-65",
-    }):
-        return (
-            "data/crystallball/"
-            "L-BAND/fitted.PKS0407.LBand.wsclean.cat.txt"
+    # L band
+    if band == "L":
+
+        # PKS 1934-638
+        if "J1939-6342" in calibrators:
+            return (
+                "data/crystallball/"
+                "L-BAND/fitted.PKS1934.LBand.wsclean.cat.txt"
+            )
+
+        # PKS 0408-65
+        if calibrators.intersection({
+            "J0408-6545",
+            "0408-65",
+        }):
+            return (
+                "data/crystallball/"
+                "L-BAND/fitted.PKS0407.LBand.wsclean.cat.txt"
+            )
+
+        raise RuntimeError(
+            "Could not determine Crystallball sky model for "
+            f"L band. Bandpass calibrator: {bpcal}, "
+            f"Flux calibrator: {fcal}. "
+            "Expected J1939-6342, J0408-6545, or 0408-65."
         )
 
     raise RuntimeError(
-        "Could not determine Crystallball sky model. "
-        f"Bandpass calibrator: {bpcal}, "
-        f"Flux calibrator: {fcal}. "
-        "Expected J1939-6342, J0408-6545, or 0408-65."
+        f"No Crystallball sky model configured for band '{band}'."
     )
 
 
@@ -267,12 +280,16 @@ def update_obs_file(ms):
 
     crystallball_sky_model = determine_crystallball_sky_model(
         bpcal,
-        fcal
+        fcal,
+        band
     )
 
     # ---------------------------------------------------------
-    # Update required fields
+    # Update obs.default
     # ---------------------------------------------------------
+
+    # Replace MS path with the --ms argument
+    obs["ms_path"] = str(ms)
 
     obs["bpcal-field"] = bpcal
     obs["fcal-field"] = fcal
@@ -280,10 +297,8 @@ def update_obs_file(ms):
     obs["xcal-field"] = xcal
     obs["target-field"] = target
 
-    # Update band
     obs["band"] = band
 
-    # Update Crystallball sky model
     obs["crystallball_sky-model"] = crystallball_sky_model
 
     # ---------------------------------------------------------
@@ -302,15 +317,14 @@ def update_obs_file(ms):
     # Report
     # ---------------------------------------------------------
 
-    print("Updated field names:")
+    print("Updated obs.yml:")
+    print(f"  ms_path:      {ms}")
     print(f"  bpcal-field:  {bpcal}")
     print(f"  fcal-field:   {fcal}")
     print(f"  gcal-field:   {gcal}")
     print(f"  xcal-field:   {xcal}")
     print(f"  target-field: {target}")
-
-    print()
-    print(f"  band: {band}")
+    print(f"  band:         {band}")
 
     print()
     print("Crystallball sky model:")
@@ -324,8 +338,7 @@ def main():
 
     parser = argparse.ArgumentParser(
         description=(
-            "Update field names, band, and Crystallball "
-            "sky model in obs.yml from a Measurement Set"
+            "Update obs.yml from a Measurement Set"
         )
     )
 
@@ -342,5 +355,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
