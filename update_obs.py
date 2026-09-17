@@ -1,5 +1,4 @@
 
-#!/usr/bin/env python3
 
 from casacore.tables import table
 from pathlib import Path
@@ -28,7 +27,6 @@ def get_field_names(ms):
     field_modes = {}
 
     for fid, sid in zip(field_id, state_id):
-
         mode = str(state_obs_mode[sid]).upper()
         name = str(field_names[fid])
 
@@ -98,15 +96,7 @@ def get_frequency_range(ms):
     spw_table = ms + "/SPECTRAL_WINDOW"
 
     with table(spw_table, readonly=True) as spw:
-
         chan_freq = spw.getcol("CHAN_FREQ")
-
-    # CHAN_FREQ has shape:
-    #
-    #   (nchan, nspw)
-    #
-    # depending on the MS. Flattening makes this robust to
-    # multiple spectral windows.
 
     frequencies = chan_freq.flatten()
 
@@ -120,8 +110,7 @@ def determine_band(ms):
     """
     Determine the MeerKAT band from the frequency coverage.
 
-    This function currently distinguishes the MeerKAT UHF
-    and L bands used in obs.yml.
+    Currently supports the MeerKAT UHF and L bands.
     """
 
     min_freq_hz, max_freq_hz = get_frequency_range(ms)
@@ -136,39 +125,61 @@ def determine_band(ms):
     print(f"  Maximum: {max_freq_mhz:.2f} MHz")
     print(f"  Centre:  {centre_freq_mhz:.2f} MHz")
 
-    # MeerKAT UHF band
-    #
-    # Nominal frequency range:
-    # approximately 544--1088 MHz.
-    #
-    # We require the observation to be predominantly inside
-    # this range.
-
+    # MeerKAT UHF
     if min_freq_mhz >= 500 and max_freq_mhz <= 1150:
-
         band = "UHF"
 
     # MeerKAT L band
-    #
-    # Nominal frequency range:
-    # approximately 856--1712 MHz.
-
     elif min_freq_mhz >= 800 and max_freq_mhz <= 1800:
-
         band = "L"
 
     else:
-
         raise RuntimeError(
             "Could not determine the MeerKAT band from the "
-            f"frequency range {min_freq_mhz:.2f}--"
-            f"{max_freq_mhz:.2f} MHz."
+            f"frequency range "
+            f"{min_freq_mhz:.2f}--{max_freq_mhz:.2f} MHz."
         )
 
     print(f"  Detected band: {band}")
     print()
 
     return band
+
+
+def determine_crystallball_sky_model(bpcal, fcal):
+    """
+    Determine the Crystallball sky model from the
+    bandpass and flux calibrator names.
+    """
+
+    bpcal = str(bpcal).strip().upper()
+    fcal = str(fcal).strip().upper()
+
+    calibrators = {bpcal, fcal}
+
+    # PKS 1934-638
+    if "J1939-6342" in calibrators:
+        return (
+            "data/crystallball/"
+            "L-BAND/fitted.PKS1934.LBand.wsclean.cat.txt"
+        )
+
+    # PKS 0408-65
+    if calibrators.intersection({
+        "J0408-6545",
+        "0408-65",
+    }):
+        return (
+            "data/crystallball/"
+            "L-BAND/fitted.PKS0407.LBand.wsclean.cat.txt"
+        )
+
+    raise RuntimeError(
+        "Could not determine Crystallball sky model. "
+        f"Bandpass calibrator: {bpcal}, "
+        f"Flux calibrator: {fcal}. "
+        "Expected J1939-6342, J0408-6545, or 0408-65."
+    )
 
 
 def update_obs_file(ms):
@@ -231,24 +242,28 @@ def update_obs_file(ms):
 
     # Polarization calibrator
     try:
-
         xcal = get_single_field(
             field_modes,
             "CALIBRATE_POLARIZATION"
         )
 
     except RuntimeError:
-
-        # Some MSs do not explicitly label the
-        # polarization calibrator.
-
         xcal = get_single_field(
             field_modes,
             "UNKNOWN"
         )
 
     # ---------------------------------------------------------
-    # Update ONLY these fields
+    # Determine Crystallball sky model
+    # ---------------------------------------------------------
+
+    crystallball_sky_model = determine_crystallball_sky_model(
+        bpcal,
+        fcal
+    )
+
+    # ---------------------------------------------------------
+    # Update ONLY the required fields
     # ---------------------------------------------------------
 
     obs["bpcal-field"] = bpcal
@@ -257,15 +272,17 @@ def update_obs_file(ms):
     obs["xcal-field"] = xcal
     obs["target-field"] = target
 
-    # Update the observation band
+    # Update band
     obs["band"] = band
+
+    # Update Crystallball sky model
+    obs["crystallball_sky-model"] = crystallball_sky_model
 
     # ---------------------------------------------------------
     # Write YAML
     # ---------------------------------------------------------
 
     with open(obs_file, "w") as f:
-
         yaml.safe_dump(
             config,
             f,
@@ -285,7 +302,11 @@ def update_obs_file(ms):
     print(f"  target-field: {target}")
 
     print()
-    print(f"  band:         {band}")
+    print(f"  band: {band}")
+
+    print()
+    print("Crystallball sky model:")
+    print(f"  {crystallball_sky_model}")
 
     print()
     print(f"Updated: {OBS_FILE}")
@@ -295,8 +316,8 @@ def main():
 
     parser = argparse.ArgumentParser(
         description=(
-            "Update field names and band in obs.yml "
-            "from a Measurement Set"
+            "Update field names, band, and Crystallball "
+            "sky model in obs.yml from a Measurement Set"
         )
     )
 
@@ -313,3 +334,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
