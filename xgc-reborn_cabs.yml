@@ -111,64 +111,71 @@ cabs:
          dtype: str
          policies:
             positional: true  
-get_target_field:
-  inputs:
-    ms:
-      dtype: ms
-      required: true
-      nom_defer: true
+  get-field-names:
+    flavour: python-code
+    command: |
+      from casacore.tables import table
 
-  outputs:
-    target:
-      dtype: str
+      # FIELD table
+      with table(ms + "/FIELD", readonly=True) as field:
+          field_names = field.getcol("NAME")
 
-  flavour: python-code
+      # STATE table
+      with table(ms + "/STATE", readonly=True) as state:
+          state_obs_mode = state.getcol("OBS_MODE")
 
-  command: |
-    from casacore.tables import table
+      # MAIN table
+      with table(ms, readonly=True) as main:
+          field_id = main.getcol("FIELD_ID")
+          state_id = main.getcol("STATE_ID")
 
-    # FIELD table
-    with table(ms + "/FIELD", readonly=True) as field:
-        field_names = field.getcol("NAME")
+      # Find e.g., TARGET state IDs
+      target_state_ids = set()
 
-    # STATE table
-    with table(ms + "/STATE", readonly=True) as state:
-        state_obs_mode = state.getcol("OBS_MODE")
+      for i, mode in enumerate(state_obs_mode):
+          if type_field in mode.upper():
+              target_state_ids.add(i)
 
-    # MAIN table
-    with table(ms, readonly=True) as main:
-        field_id = main.getcol("FIELD_ID")
-        state_id = main.getcol("STATE_ID")
+      # Find fields associated with e.g TARGETS states
+      target_field_ids = set()
 
-    # Find TARGET state IDs
-    target_state_ids = set()
+      for fid, sid in zip(field_id, state_id):
+          if sid in target_state_ids:
+              target_field_ids.add(fid)
 
-    for i, mode in enumerate(state_obs_mode):
-        if "TARGET" in mode.upper():
-            target_state_ids.add(i)
+      target_field_names = [
+          field_names[fid] for fid in sorted(target_field_ids)
+      ]
 
-    # Find fields associated with TARGET states
-    target_field_ids = set()
+      if not target_field_names:
+          raise RuntimeError("No "+type_field+" field found.")
 
-    for fid, sid in zip(field_id, state_id):
-        if sid in target_state_ids:
-            target_field_ids.add(fid)
+      if type_field=="TARGET" and len(target_field_names) > 1:
+          raise RuntimeError(
+              f"Multiple TARGET fields found: {target_field_names}"
+          )
 
-    target_field_names = [
-        field_names[fid] for fid in sorted(target_field_ids)
-    ]
+      field_name = target_field_names[0]
+      print(f"{type_field} name is {field_name}")
+      print("STIMELA_OUTPUT_TEST_START")
+      print(field_name)
+      print("STIMELA_OUTPUT_TEST_END")
+    
 
-    if not target_field_names:
-        raise RuntimeError("No TARGET field found.")
+    inputs:
+      ms:
+        info: Path to the measurement set.
+        dtype: MS
+        policies:
+          positional: true
+        must_exist: true
+      type_field:
+        dtype: str 
+        required: true    
+    outputs:
+      field_name:
+        dtype: str  
 
-    if len(target_field_names) > 1:
-        raise RuntimeError(
-            f"Multiple TARGET fields found: {target_field_names}"
-        )
-
-    target = target_field_names[0]
-
-  
 
   fix-ms-direction:
     info: gets direction of given solar system body for mid-point of MS
@@ -319,6 +326,7 @@ get_target_field:
     outputs:
       num_intervals:
         dtype: int
+     
 
 
 lib:
