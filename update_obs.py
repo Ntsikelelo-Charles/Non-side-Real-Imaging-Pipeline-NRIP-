@@ -75,19 +75,6 @@ def get_single_field(field_modes, search_string):
     return names[0]
 
 
-def get_multiple_fields(field_modes, search_string):
-    """Return all matching fields."""
-
-    names = find_fields(field_modes, search_string)
-
-    if not names:
-        raise RuntimeError(
-            f"No field found with OBS_MODE containing "
-            f"'{search_string}'"
-        )
-
-    return names
-
 
 def get_frequency_range(ms):
     """
@@ -248,13 +235,13 @@ def update_obs_file(ms):
     )
 
     # Get ALL phase calibrators
-    gcal_fields = get_multiple_fields(
+    gcal_fields =get_single_field(
         field_modes,
         "CALIBRATE_PHASE"
     )
 
-    # Store multiple phase calibrators as a comma-separated string
-    gcal = ", ".join(gcal_fields)
+    
+    gcal = gcal_fields
 
     target = get_single_field(
         field_modes,
