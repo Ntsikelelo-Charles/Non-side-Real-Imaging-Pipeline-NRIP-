@@ -9,6 +9,19 @@ import yaml
 OBS_FILE = "xgc-reborn_obs.yml"
 
 
+```python
+#!/usr/bin/env python3
+
+from casacore.tables import table
+from pathlib import Path
+import argparse
+import warnings
+import yaml
+
+
+# Fixed obs.yml filename
+OBS_FILE = "obs.yml"
+
 
 def get_field_names(ms):
     """Return field names grouped by OBS_MODE."""
@@ -74,6 +87,44 @@ def get_single_field(field_modes, search_string):
 
     return names[0]
 
+
+def get_multiple_fields(field_modes, search_string):
+    """Return all matching fields."""
+
+    names = find_fields(field_modes, search_string)
+
+    if not names:
+        raise RuntimeError(
+            f"No field found with OBS_MODE containing "
+            f"'{search_string}'"
+        )
+
+    return names
+
+
+def get_first_antenna(ms):
+    """
+    Return the first antenna listed in the ANTENNA table.
+    """
+
+    antenna_table = ms + "/ANTENNA"
+
+    with table(antenna_table, readonly=True) as antenna:
+        antenna_names = antenna.getcol("NAME")
+
+    if len(antenna_names) == 0:
+        raise RuntimeError(
+            f"No antennas found in {antenna_table}"
+        )
+
+    first_antenna = str(antenna_names[0]).strip()
+
+    if not first_antenna:
+        raise RuntimeError(
+            "The first antenna in the MS has an empty name."
+        )
+
+    return first_antenna
 
 
 def get_frequency_range(ms):
@@ -234,14 +285,12 @@ def update_obs_file(ms):
         "CALIBRATE_FLUX"
     )
 
-    # Get ALL phase calibrators
-    gcal_fields =get_single_field(
+    # Get one phase calibrator
+    gcal= get_single_field(
         field_modes,
         "CALIBRATE_PHASE"
     )
 
-    
-    gcal = gcal_fields
 
     target = get_single_field(
         field_modes,
@@ -272,6 +321,12 @@ def update_obs_file(ms):
     )
 
     # ---------------------------------------------------------
+    # Determine reference antenna
+    # ---------------------------------------------------------
+
+    cal_refant = get_first_antenna(ms)
+
+    # ---------------------------------------------------------
     # Update obs.default
     # ---------------------------------------------------------
 
@@ -284,9 +339,14 @@ def update_obs_file(ms):
     obs["xcal-field"] = xcal
     obs["target-field"] = target
 
+    # Update band
     obs["band"] = band
 
+    # Update Crystallball sky model
     obs["crystallball_sky-model"] = crystallball_sky_model
+
+    # Update calibration reference antenna
+    obs["cal_refant"] = cal_refant
 
     # ---------------------------------------------------------
     # Write YAML
@@ -312,6 +372,7 @@ def update_obs_file(ms):
     print(f"  xcal-field:   {xcal}")
     print(f"  target-field: {target}")
     print(f"  band:         {band}")
+    print(f"  cal_refant:   {cal_refant}")
 
     print()
     print("Crystallball sky model:")
