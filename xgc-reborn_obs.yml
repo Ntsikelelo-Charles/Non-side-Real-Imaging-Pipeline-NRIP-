@@ -1,10 +1,10 @@
 obs:
   default:
-    ms_path: /net/ziggy/data/oms/killick-cv/data/raw/1680991557_sdp_l0.ms
+    ms_path: /net/ziggy/data/oms/killick-cv/data/raw/1680991558_sdp_l0.ms
     ms_data-ID: OutputDir
     bpcal-field: J1939-6342
     fcal-field: J1939-6342
-    gcal-field: J1517-2422, J1605-1734
+    gcal-field: J1517-2422
     xcal-field: J1331+3030
     target-field: HD142990
     breizorro_dilate: 2
@@ -28,26 +28,25 @@ obs:
     wsclean_auto-threshold: 2
     wsclean_weight: briggs 0.0
     wsclean_parallel-gridding: 1
-    band: L
-    crystallball_sky-model: data/crystallball/L-BAND/fitted.PKS1934.LBand.wsclean.cat.txt
+    band: UHF
+    crystallball_sky-model: data/crystallball/UHF-BAND/fitted.PKS1934.UBand.wsclean.cat.txt
+    tricolour_config-cals: data/tricolour/khruschev.yaml
+    tricolour_config-target: data/tricolour/gorbachev.yaml
 band:
   L:
     cal_uvrange: '>150m'
     cal_spw: 0:1300~1400MHz
-    casa_flagdata_uvrange: 0~70000
+    casa_flagdata_uvrange: 0~70000. ## need check if this is ok?
     casa_flagdata_spw: '*:1160MHz~1180MHz,*:1200MHz~1280MHz,*:1540MHz~1580MHz'
     casa_flagdata_mask: '*:900MHz~1080MHz, *:1080MHz~1095MHz, *:1166MHz~1300MHz, *:1375MHz~1387MHz,
       *:1453MHz~1490MHz, *:1526MHz~1626MHz'
     casa_flagdata_bpassedges: '*:856~903MHz,*:1658~1800MHz,*:1419.8~1421.3MHz'
-    tricolour_config-cals: data/tricolour/khruschev.yaml
-    tricolour_config-target: data/tricolour/gorbachev.yaml
-    crystallball_sky-model: data/crystallball/L-BAND/fitted.PKS1934.LBand.wsclean.cat.txt
+    
   UHF:
     cal_uvrange: '>150m'
     cal_spw: 0:850~900MHz
     casa_flagdata_uvrange: 0~1000
     casa_flagdata_mask: ''
     casa_flagdata_bpassedges: '*:540~570MHz,*:1010~1150MHz'
-    tricolour_config-cals: data/tricolour/khruschev.yaml
-    tricolour_config-target: data/tricolour/gorbachev.yaml
-    crystallball_sky-model: data/crystallball/UHF-BAND/fitted.PKS1934.UBand.wsclean.cat.txt
+    
+  
