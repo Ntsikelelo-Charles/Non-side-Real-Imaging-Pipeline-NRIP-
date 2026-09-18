@@ -9,20 +9,6 @@ import yaml
 OBS_FILE = "xgc-reborn_obs.yml"
 
 
-```python
-#!/usr/bin/env python3
-
-from casacore.tables import table
-from pathlib import Path
-import argparse
-import warnings
-import yaml
-
-
-# Fixed obs.yml filename
-OBS_FILE = "obs.yml"
-
-
 def get_field_names(ms):
     """Return field names grouped by OBS_MODE."""
 
