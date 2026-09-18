@@ -419,19 +419,27 @@ xgc-reborn:
                         threshold: 10
                         dilate: 5
 
+            image-2:
+                  _use: lib.steps.wsclean.image_pol
+                  params:
+                        column: 'CORRECTED_DATA'
+                        fits-mask: "{steps.mask-*.outfile}"
+                        niter: 100000
+                        pol: IQ            
+
             selfcal-1:
                   _use: lib.steps.selfcal.direction-independent
                   info: Perform round of direction-independent selfcal
                   params:
                         input_ms.data_column: "{steps.image-*.column}"
-                        output.columns: ['CORRECTED{info.suffix}_DATA']
+                        output.columns: ['CORRECTED1_DATA']
                         output.products: [corrected_data]
                         solver.terms: [K]
-                        solver.iter_recipe: [1]
+                        solver.iter_recipe: [100]
                         dask.threads: 8 
                         mad_flags.enable: false
 
-            image-2:
+            image-3:
                   _use: lib.steps.wsclean.image_pol
                   params:
                         column: 'CORRECTED1_DATA'
@@ -439,35 +447,8 @@ xgc-reborn:
                         niter: 100000
                         pol: IQ
 
-            mask-2:
-                  cab: breizorro
-                  params:
-                        restored-image: '{steps.image-*.prefix}-MFS-I-image.fits'
-                        outfile: '{steps.image-*.prefix}-mask.fits'
-                        
-
-            selfcal-2:
-                  _use: lib.steps.selfcal.direction-independent
-                  info: Perform round of direction-independent selfcal
-                  params:
-                        input_ms.data_column: "{steps.image-*.column}"
-                        output.columns: ['CORRECTED{info.suffix}_DATA']
-                        output.products: [corrected_data]
-                        solver.terms: [K]
-                        solver.iter_recipe: [50]
-                        dask.threads: 8 
-                        mad_flags.enable: false
-
-            image-3:
-                  _use: lib.steps.wsclean.image_pol
-                  params:
-                        column: 'CORRECTED2_DATA'
-                        fits-mask: "{steps.mask-*.outfile}"
-                        niter: 100000
-                        pol: IQ
                   
-
-            mask-3:
+            mask-2:
                   cab: breizorro
                   params:
                         restored-image: ='{steps.image-*.prefix}-MFS-I-image.fits'
@@ -498,14 +479,14 @@ xgc-reborn:
                   params:
                         msname: ='{recipe.msdir}/target.ms'
                         fromcol: MODEL_DATA
-                        tocol: =IF(recipe.upsample-channels, 'MODEL{info.suffix}_{recipe.upsample-channels}_DATA', 'MODEL{info.suffix}_DATA')
+                        tocol: =IF(recipe.upsample-channels, 'MODEL1_{recipe.upsample-channels}_DATA', 'MODEL_DATA')
 
-            selfcal-3:
+            selfcal-2:
                   _use: lib.steps.selfcal.direction-independent
                   info: Perform round of direction-independent selfcal
                   params:
-                        input_ms.data_column: CORRECTED2_DATA
-                        output.columns: ['CORRECTED{info.suffix}_DATA']
+                        input_ms.data_column: CORRECTED1_DATA
+                        output.columns: ['CORRECTED2_DATA']
                         solver.terms: [K]
                         solver.iter_recipe: [50]
                         dask.threads: 8 
@@ -516,7 +497,7 @@ xgc-reborn:
                   _use: lib.steps.wsclean.image_pol
                   params:
                         prefix: ="{recipe.imdir}/image-upsampled_{info.suffix}"
-                        column: 'CORRECTED3_DATA'
+                        column: 'CORRECTED2_DATA'
                         fits-mask: =steps.mask-*.outfile
                         niter: 100000
                         pol: IQUV
