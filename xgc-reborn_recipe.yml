@@ -488,7 +488,7 @@ xgc-reborn:
                         input_ms.data_column: CORRECTED1_DATA
                         output.columns: ['CORRECTED2_DATA']
                         solver.terms: [K]
-                        solver.iter_recipe: [50]
+                        solver.iter_recipe: [100]
                         dask.threads: 8 
                         mad_flags.enable: false
                         input_model.recipe: =steps.predict-copycol-*.tocol
