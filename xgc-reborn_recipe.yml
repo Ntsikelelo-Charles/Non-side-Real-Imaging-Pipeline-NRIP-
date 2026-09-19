@@ -496,7 +496,7 @@ xgc-reborn:
             image-4:
                   _use: lib.steps.wsclean.image_pol
                   params:
-                        prefix: ="{recipe.imdir}/image-upsampled_{info.suffix}"
+                        prefix: ="{recipe.imdir}/image-{info.suffix}/image-upsampled_{info.suffix}"
                         column: 'CORRECTED2_DATA'
                         fits-mask: =steps.mask-*.outfile
                         niter: 100000
