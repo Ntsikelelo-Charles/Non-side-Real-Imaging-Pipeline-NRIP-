@@ -186,10 +186,24 @@ def determine_crystallball_sky_model(bpcal, fcal, band):
 
     # UHF
     if band == "UHF":
-        return (
-            "data/crystallball/"
-            "UHF-BAND/fitted.PKS1934.UBand.wsclean.cat.txt"
-        )
+
+        # PKS 1934-638
+        if "J1939-6342" in calibrators:
+            return (
+                "data/crystallball/"
+                "UHF-BAND/fitted.PKS1934.UBand.wsclean.cat.txt"
+            )
+
+        # PKS 0408-65
+        if calibrators.intersection({
+            "J0408-6545",
+            "0408-65",
+        }):
+            return (
+                "data/crystallball/"
+                "UHF-BAND/fitted.PKS0407.UBand.wsclean.cat.txt"
+            )
+        
 
     # L band
     if band == "L":
@@ -389,3 +403,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
