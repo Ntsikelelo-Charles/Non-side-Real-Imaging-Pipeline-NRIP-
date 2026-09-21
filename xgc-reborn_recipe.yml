@@ -82,7 +82,7 @@ xgc-reborn:
                   recipe: flag-cals
                   params:
                         field: '{recipe.bpcal-field},{recipe.gcal-field},{recipe.xcal-field}'
-                        uvrange: '{recipe.casa_flagdata_uvrange_cal}'
+      
                                                        
             unflag-cals:
                   _use: lib.steps.flagdata.unflag.calibrators 
@@ -386,7 +386,7 @@ xgc-reborn:
                   recipe: flag-target
                   params:
                         field: '{recipe.target-field}'
-                        uvrange: '{recipe.casa_flagdata_uvrange_target}'
+                        
                                           
             unflag-target:
                   _use: lib.steps.flagdata.unflag.target 
