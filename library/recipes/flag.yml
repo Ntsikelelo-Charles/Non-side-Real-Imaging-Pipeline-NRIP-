@@ -93,7 +93,7 @@ lib:
                   info: Mask known RFI regions (GSM and aviation,GPS,Galilleo,Irridium,Inmarsat,Afristar etc)
                   params:
                         spw: '{root.casa_flagdata_mask}'
-                        uvrange: '{root.casa_flagdata_uvrange}'    
+                        uvrange: '0~60000'    
                     
             flag-summary2:
                   _use: lib.steps.flagdata.flag-summary.calibrators
