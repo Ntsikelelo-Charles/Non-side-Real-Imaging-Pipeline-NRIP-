@@ -13,6 +13,9 @@ lib:
       inputs:
             field:
                   dtype: str 
+
+            uvrange: 
+                  dtype: str      
             
       steps:
       
@@ -198,74 +201,77 @@ lib:
       inputs:
             field:
                   dtype: str 
+
+            uvrange: 
+                  dtype: str         
             
       steps:
       
-            # save2-preflags:
-            #       _use: lib.steps.flagdata.save-flags.target
-            #       info: Back up any flags before running basic flagging
-            #       params:
-            #             versionname: pre_targetflags
+            save2-preflags:
+                  _use: lib.steps.flagdata.save-flags.target
+                  info: Back up any flags before running basic flagging
+                  params:
+                        versionname: pre_targetflags
                  
-            # flag2-autocorr: 
-            #       _use: lib.steps.flagdata.flag-manual.target
-            #       info: Flag auto correlations. 
-            #       params: 
-            #             autocorr: true
+            flag2-autocorr: 
+                  _use: lib.steps.flagdata.flag-manual.target
+                  info: Flag auto correlations. 
+                  params: 
+                        autocorr: true
                  
-            # flag2-shadow:
-            #       _use: lib.steps.flagdata.flag-shadow.target
-            #       info: Flag shadowed antenna
-            #       params:
-            #             tolerance: '{root.casa_flagdata_tolerance}'
+            flag2-shadow:
+                  _use: lib.steps.flagdata.flag-shadow.target
+                  info: Flag shadowed antenna
+                  params:
+                        tolerance: '{root.casa_flagdata_tolerance}'
                  
-            # flag2-elevation:
-            #       _use: lib.steps.flagdata.flag-elevation.target
-            #       info: Flag antenna with pointing elevation outside the selected range
-            #       params:
-            #             lowerlimit: '{root.casa_flagdata_lowerlimit}'  
+            flag2-elevation:
+                  _use: lib.steps.flagdata.flag-elevation.target
+                  info: Flag antenna with pointing elevation outside the selected range
+                  params:
+                        lowerlimit: '{root.casa_flagdata_lowerlimit}'  
                         
-            # flag2-inspect1:
-            #       _use: lib.steps.flagdata.inspect-flags.amptime.target
-            #       info: Inspect amp-time plot for quack flagging
-            #       params: 
-            #             coloraxis: 'scan' 
+            flag2-inspect1:
+                  _use: lib.steps.flagdata.inspect-flags.amptime.target
+                  info: Inspect amp-time plot for quack flagging
+                  params: 
+                        coloraxis: 'scan' 
                   
-            # flag2-quack1:
-            #       _use: lib.steps.flagdata.flag-quack.target
-            #       info:  Flag data at the start of the scans.
-            #       params: 
-            #             quackmode: 'beg'
+            flag2-quack1:
+                  _use: lib.steps.flagdata.flag-quack.target
+                  info:  Flag data at the start of the scans.
+                  params: 
+                        quackmode: 'beg'
                    
-            # flag2-quack2:
-            #       _use: lib.steps.flagdata.flag-quack.target
-            #       info: Flag data at the end of the scans. 
-            #       params: 
-            #             quackmode: 'endb'
+            flag2-quack2:
+                  _use: lib.steps.flagdata.flag-quack.target
+                  info: Flag data at the end of the scans. 
+                  params: 
+                        quackmode: 'endb'
                  
-            # flag2-zeros:
-            #       _use: lib.steps.flagdata.flag-clip.data.zeros.target
-            #       info: Flag zero values data. 
-            #       params: 
-            #             clipzeros: true
+            flag2-zeros:
+                  _use: lib.steps.flagdata.flag-clip.data.zeros.target
+                  info: Flag zero values data. 
+                  params: 
+                        clipzeros: true
                  
-            # flag2-edges:
-            #       _use: lib.steps.flagdata.flag-manual.target
-            #       info: Flag Bandpass edges and galactic plane
-            #       params: 
-            #             spw:   '{root.casa_flagdata_bpassedges}' 
+            flag2-edges:
+                  _use: lib.steps.flagdata.flag-manual.target
+                  info: Flag Bandpass edges and galactic plane
+                  params: 
+                        spw:   '{root.casa_flagdata_bpassedges}' 
                  
-            # flag2-summary1:
-            #       _use: lib.steps.flagdata.flag-summary.target
-            #       info: Generate a summary of flagged data after basic flagging
-            #       params: 
-            #             field:   '{root.target-field}'
+            flag2-summary1:
+                  _use: lib.steps.flagdata.flag-summary.target
+                  info: Generate a summary of flagged data after basic flagging
+                  params: 
+                        field:   '{root.target-field}'
                  
-            # save2-basicflags:
-            #       _use: lib.steps.flagdata.save-flags.target
-            #       info: Back up any flags before running RFI masker
-            #       params:
-            #             versionname: basic_flags
+            save2-basicflags:
+                  _use: lib.steps.flagdata.save-flags.target
+                  info: Back up any flags before running RFI masker
+                  params:
+                        versionname: basic_flags
                  
             flag2-maskRFI:
                   _use: lib.steps.flagdata.flag-manual.target

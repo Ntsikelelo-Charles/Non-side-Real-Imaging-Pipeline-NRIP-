@@ -1,16 +1,16 @@
 obs:
   default:
-    ms_path: /data/ncharles/1680991558_sdp_l0.ms
+    ms_path: /net/ziggy/data/oms/killick-cv/data/raw/1726319116_sdp_l0.ms
     ms_data-ID: OutputDir
     bpcal-field: J1939-6342
     fcal-field: J1939-6342
-    gcal-field: J1517-2422
+    gcal-field: J1605-1734
     xcal-field: J1331+3030
-    target-field: HD142990
+    target-field: HD142184
     breizorro_dilate: 2
     breizorro_boxsize: 50
     breizorro_threshold: 6.5
-    cal_refant: m007
+    cal_refant: m000
     quartical_refant: 5
     quartical_mad_flags: true
     casa_flagdata_lowerlimit: 0
@@ -46,10 +46,7 @@ band:
     cal_uvrange: '>150m'
     cal_spw: 0:850~900MHz
     casa_flagdata_uvrange_target: 0~60000
-    casa_flagdata_uvrange: 0~600 ## flag all bad bands
-    casa_flagdata_spw: >-
-          *:540~580MHz,
-          *:935~960MHz,
-          *:1050~1150MHz
+    casa_flagdata_uvrange: 0~600
+    casa_flagdata_spw: '*:540~580MHz, *:935~960MHz, *:1050~1150MHz'
     casa_flagdata_mask: ''
     casa_flagdata_bpassedges: '*:540~570MHz,*:1010~1150MHz'
