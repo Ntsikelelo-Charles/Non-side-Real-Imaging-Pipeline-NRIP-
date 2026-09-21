@@ -36,7 +36,8 @@ band:
   L:
     cal_uvrange: '>150m'
     cal_spw: 0:1300~1400MHz
-    casa_flagdata_uvrange: 0~6000.
+    casa_flagdata_uvrange_cal: 0~700
+    casa_flagdata_uvrange_target: 0~70000
     casa_flagdata_spw: '*:1160MHz~1180MHz,*:1200MHz~1280MHz,*:1540MHz~1580MHz'
     casa_flagdata_mask: '*:900MHz~1080MHz, *:1080MHz~1095MHz, *:1166MHz~1300MHz, *:1375MHz~1387MHz,
       *:1453MHz~1490MHz, *:1526MHz~1626MHz'
@@ -44,6 +45,11 @@ band:
   UHF:
     cal_uvrange: '>150m'
     cal_spw: 0:850~900MHz
-    casa_flagdata_uvrange: 0~1000
+    casa_flagdata_uvrange_target: 0~60000
+    casa_flagdata_uvrange: 0~600 ## flag all bad bands
+    casa_flagdata_spw: >-
+          *:540~580MHz,
+          *:935~960MHz,
+          *:1050~1150MHz
     casa_flagdata_mask: ''
     casa_flagdata_bpassedges: '*:540~570MHz,*:1010~1150MHz'
