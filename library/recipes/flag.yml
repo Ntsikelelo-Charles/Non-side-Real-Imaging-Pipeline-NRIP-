@@ -13,9 +13,6 @@ lib:
       inputs:
             field:
                   dtype: str 
-
-            uvrange: 
-                  dtype: str      
             
       steps:
       
@@ -201,9 +198,6 @@ lib:
       inputs:
             field:
                   dtype: str 
-
-            uvrange: 
-                  dtype: str         
             
       steps:
       
@@ -278,7 +272,7 @@ lib:
                   info: Mask known RFI regions (GSM and aviation,GPS,Galilleo,Irridium,Inmarsat,Afristar etc)
                   params:
                         spw: '{root.casa_flagdata_mask}'
-                        uvrange: '{root.casa_flagdata_uvrange}'
+                        uvrange: '0~700000'
                  
             flag2-summary2:
                   _use: lib.steps.flagdata.flag-summary.target
