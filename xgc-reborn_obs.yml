@@ -45,6 +45,6 @@ band:
     cal_uvrange: '>150m'
     cal_spw: 0:850~900MHz
     casa_flagdata_uvrange: 0~600
-    casa_flagdata_spw: '' 
+    casa_flagdata_spw:  '*:540~580MHz, *:935~960MHz, *:1050~1150MHz'
     casa_flagdata_mask: '*:540~580MHz, *:935~960MHz, *:1050~1150MHz'
     casa_flagdata_bpassedges: '*:540~570MHz,*:1010~1150MHz'
