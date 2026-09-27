@@ -1,6 +1,6 @@
 
 _include:
-    library:
+    ./library:
     
        recipes:
           - flag.yml
