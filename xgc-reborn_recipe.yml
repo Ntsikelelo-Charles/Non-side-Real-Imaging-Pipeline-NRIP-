@@ -1,6 +1,6 @@
 #!/usr/bin/env -S stimela run 
 _include:    
-      - xgc-reborn_cabs.yml
+      - ./xgc-reborn_cabs.yml
             
 opts:
 
@@ -32,7 +32,7 @@ xgc-reborn:
             log.dir: '{recipe.logdir}/log-{config.run.datetime}'
                   
       assign_based_on:
-            _include: xgc-reborn_obs.yml
+            _include: ./xgc-reborn_obs.yml
             
       
             
