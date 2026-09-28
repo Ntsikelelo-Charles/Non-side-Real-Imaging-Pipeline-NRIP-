@@ -291,6 +291,7 @@ lib:
                   info: Auto flag data using tricolour
                   params:
                         window-backend: zarr-disk
+                        temporary-directory: '{root.msdir}'
                  
             flag2-summary3:
                   _use: lib.steps.flagdata.flag-summary.target
