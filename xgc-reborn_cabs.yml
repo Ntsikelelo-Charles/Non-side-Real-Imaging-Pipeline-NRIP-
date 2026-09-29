@@ -64,6 +64,43 @@ cabs:
         dtype: int
         default: 4
  
+  casa.setjy:
+      flavour: 
+         kind: python-code
+         input_dict: args
+      name: casa.setjy
+      command: |
+         from omegaconf import OmegaConf
+         from casatasks import setjy
+         import numpy as np
+         if field == 'J0521+1638':
+            print(f"Setting manual flux for Polarization calibrator {field} using Manual")
+            setjy(
+               fluxdensity= [8.33843,0.0,0.0,0.0], 
+               spix= [-0.4981, -0.1552, -0.0102, 0.0223],
+               reffreq= '1.47GHz',
+               polindex= [0.078],
+               polangle=[-0.16755],
+               standard='manual',
+               scalebychan=True,
+               usescratch=True,**args)
+         elif field == 'J1331+3030':
+            print(f"Setting flux for Polarization calibrator {field} using Perley-Butler 2013")
+            setjy(
+               standard='Perley-Butler 2013',
+               scalebychan=True,
+               usescratch=True,**args)
+         else:
+            print(f"Setting flux for Secondary calibrator field {field} using manual")
+            setjy(
+               standard='manual',
+               scalebychan=True,
+               usescratch=True,**args)
+      inputs:
+         ms:
+            dtype: MS
+         field:
+            dtype: str
                 
   mv:
     command: mv
