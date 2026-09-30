@@ -85,9 +85,14 @@ cabs:
                scalebychan=True,
                usescratch=True,**args)
          elif field == 'J1331+3030':
-            print(f"Setting flux for Polarization calibrator {field} using Perley-Butler 2013")
+            print(f"Setting flux for Polarization calibrator {field} using Manual")
             setjy(
-               standard='Perley-Butler 2013',
+               fluxdensity= [14.7172,0.0,0.0,0.0], 
+               spix= [-0.4507, -0.1798, 0.0357],
+               reffreq= '1.47GHz',
+               polindex= [0.098],
+               polangle=[0.575959],
+               standard='manual',
                scalebychan=True,
                usescratch=True,**args)
          else:
