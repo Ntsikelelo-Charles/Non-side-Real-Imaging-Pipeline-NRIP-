@@ -42,7 +42,7 @@ band:
       *:1453MHz~1490MHz, *:1526MHz~1626MHz'
     casa_flagdata_bpassedges: '*:856~903MHz,*:1658~1800MHz,*:1419.8~1421.3MHz'
   UHF:
-    cal_uvrange: '>150m'
+    cal_uvrange: '>600m'
     cal_spw: 0:850~900MHz
     casa_flagdata_uvrange: 0~7000
     casa_flagdata_spw:  '*:540~580MHz, *:935~960MHz, *:1050~1150MHz'
